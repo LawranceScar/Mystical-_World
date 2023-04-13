@@ -7,11 +7,6 @@ public class TakeSword : MonoBehaviour
     public Transform Sword;
     float range = 3;
     public GameObject Camera;
-    void Start()
-    {
-        
-    }
-
     void Update()
     {
         RaycastHit hit;

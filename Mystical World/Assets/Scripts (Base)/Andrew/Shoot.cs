@@ -14,10 +14,6 @@ public class Shoot : MonoBehaviour
     public float ShootTime = 0.0f;
     public float ShootDelay = 0.1f;
 
-    void Start()
-    {
-    }
-
 
     void Update()
     {
