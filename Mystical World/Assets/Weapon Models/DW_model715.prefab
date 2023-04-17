@@ -713,7 +713,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38f3c5c66e8eb34419a8e1b9e4a4b981, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Bullet: {fileID: 0}
+  Bullet: {fileID: 1159880174095791723, guid: 8cf71d469f8c89045bc3ebfcdd53cc4e, type: 3}
   CubeTransform: {fileID: 8853483532612216664}
   PivotTransform: {fileID: 8853483532612216650}
   MuzzleTransform: {fileID: 6402655222839811731}
