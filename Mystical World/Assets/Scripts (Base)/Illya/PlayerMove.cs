@@ -43,14 +43,14 @@ public class PlayerMove : MonoBehaviour
     {
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
-        rb.AddForce(moveDirection.normalized * moveForce, ForceMode.Force);
+        rb.AddRelativeForce(moveDirection.normalized * moveForce, ForceMode.Force);
     }
     private void JumpPlayer()
     {
         jumpDirection = orientation.up * jumpInput;
         if(jumpCount <= maxJumpCount  && jumpInput > 0)
         {
-            rb.AddForce(jumpDirection.normalized * jumpForce, ForceMode.Impulse); 
+            rb.AddRelativeForce(jumpDirection.normalized * jumpForce, ForceMode.Impulse); 
             jumpCount++;
         }
     }

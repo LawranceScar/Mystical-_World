@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AllLiferSystems : MonoBehaviour, IDamagable
+public class AllLiferSystems : MonoBehaviour, IDamagable, IHealable
 {
     [Header("Health Settings")]
     [SerializeField] protected float HealthPlayer = 100; // Скільки всього хп
@@ -15,6 +15,9 @@ public class AllLiferSystems : MonoBehaviour, IDamagable
     [Header("Stamina Settings")]
 
     [SerializeField] protected int Stamina = 100; // Скільки всього стаміни 
+    [SerializeField] protected int DefaultStamina = 100; // Скільки всього стаміни 
+    [SerializeField] public float DefaultHP = 100;
+    [SerializeField] public int DefaultMP = 40;
     [SerializeField] protected int StaminaKiller = 1; // Скільки віднімається за раз
     [SerializeField] protected float TimerAmountKiller = 0.03f; // Скільки часу на перезарядку самої стаміни при використанні
     [SerializeField] protected float TimerRespawnStaminaAmount = 3.0f; // Скільки часу стаміна робить reload
@@ -27,9 +30,9 @@ public class AllLiferSystems : MonoBehaviour, IDamagable
     [SerializeField] protected float TimerRespawnManaAmount = 3.0f;
 
     // Не чіпати
-    [HideInInspector] public float DefaultHP;
-    [HideInInspector] public int DefaultStamina;
-    [HideInInspector] public int DefaultMP;
+   // [HideInInspector] public float DefaultHP;
+   // [HideInInspector] public int DefaultStamina;
+  //  [HideInInspector] public int DefaultMP;
     [HideInInspector] public int MpAmount; // Кількість мани
     [HideInInspector] public int StaminaAmount; // Кількість стаміни
     [HideInInspector] public float Health; // Кількість ХП
@@ -50,6 +53,10 @@ public class AllLiferSystems : MonoBehaviour, IDamagable
     {
         Health = Health - damage;
     }
+    public void Heal(float heal)
+    {
+        Health = Health + heal;
+    }
 
     void Start()
     {
@@ -61,9 +68,9 @@ public class AllLiferSystems : MonoBehaviour, IDamagable
         StaminaAmount = Stamina;
         Health = HealthPlayer;
         MpAmount = Mana;
-        DefaultHP = Health;
-        DefaultStamina = StaminaAmount;
-        DefaultMP = MpAmount;
+      //  DefaultHP = Health;
+      //  DefaultStamina = StaminaAmount;
+       // DefaultMP = MpAmount;
     }
 
     void Update()
@@ -141,6 +148,11 @@ public class AllLiferSystems : MonoBehaviour, IDamagable
             IsDead = false;
         }
 
+        if (Health > HealthPlayer)
+        {
+            Health = HealthPlayer;
+        }
+
         if (Health < 0)
         {
             Health = 0;
@@ -171,7 +183,7 @@ public class AllLiferSystems : MonoBehaviour, IDamagable
     {
         if (IsDead == false)
         {
-            if (Input.GetKey(KeyCode.LeftShift))
+          /*  if (Input.GetKey(KeyCode.LeftShift))
             {
                 TimerManaAmount -= Time.deltaTime;
                 if (TimerManaAmount <= 0)
@@ -196,8 +208,7 @@ public class AllLiferSystems : MonoBehaviour, IDamagable
                         }
                         //  Debug.Log(MpAmount);
                     }
-                }
-            }
+                } */
 
             if (MpAmount < 0)
             {
@@ -205,6 +216,10 @@ public class AllLiferSystems : MonoBehaviour, IDamagable
             }
         }
         else
+        {
+            MpAmount = Mana;
+        }
+        if (MpAmount > Mana)
         {
             MpAmount = Mana;
         }
