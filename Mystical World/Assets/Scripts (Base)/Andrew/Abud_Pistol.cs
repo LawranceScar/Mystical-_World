@@ -19,6 +19,7 @@ public class Abud_Pistol : MonoBehaviour
 
     void Update()
     {
+        Shoot ShootRef = GetComponent<Shoot>();
         RaycastHit hit;
         if(Physics.Raycast(Camera.transform.position, Camera.transform.forward, out hit, range) && Input.GetKey(KeyCode.E) && hit.transform.tag == "Pistol" && IsPistol == false)
         {
@@ -26,16 +27,18 @@ public class Abud_Pistol : MonoBehaviour
             GetPistol(hit.transform);
             TopPistol = hit.transform.gameObject;
             IsPistol = true;
+            ShootRef = TopPistol.transform.GetComponent<Shoot>();
         }
         if(Physics.Raycast(Camera.transform.position, Camera.transform.forward, out hit, range) && Input.GetKey(KeyCode.E) && hit.transform.tag == "Pistol" && IsPistol == true)
         {
             DropPistol(TopPistol.transform);
             GetPistol(hit.transform);
             TopPistol = hit.transform.gameObject;
+            ShootRef = TopPistol.transform.GetComponent<Shoot>();
         } 
-            Shoot ShootRef = GetComponent<Shoot>();
             if(ShootRef != null)
             {
+                Debug.Log(2);
                 ShootRef.ShootBullet();
             }
     }
