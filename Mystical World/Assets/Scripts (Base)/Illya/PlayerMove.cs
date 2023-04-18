@@ -4,13 +4,19 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-   public float moveSpeed;
+    public float moveForce;
+    public float jumpForce;
     public Transform orientation;
 
-    float horizontalInput;
-    float verticalInput;
+    private float horizontalInput;
+    private float verticalInput;
+    private float jumpInput;
+
+    private int maxJumpCount = 2;
+    private int jumpCount = 0;
 
     Vector3 moveDirection;
+    Vector3 jumpDirection;
     Rigidbody rb;
 
     private void Start()
@@ -21,6 +27,7 @@ public class PlayerMove : MonoBehaviour
     private void FixedUpdate()
     {
         MovePlayer();
+        JumpPlayer();
     }
     private void Update()
     {
@@ -30,21 +37,28 @@ public class PlayerMove : MonoBehaviour
     {
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
+        jumpInput = Input.GetAxis("Jump");
     }
     private void MovePlayer()
     {
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
-        rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+        rb.AddRelativeForce(moveDirection.normalized * moveForce, ForceMode.Force);
     }
-    private void SpeedControl()
+    private void JumpPlayer()
     {
-        Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-
-        if(flatVel.magnitude > moveSpeed)
+        jumpDirection = orientation.up * jumpInput;
+        if(jumpCount <= maxJumpCount  && jumpInput > 0)
         {
-            Vector3 limitedVel = flatVel.normalized * moveSpeed;
-            rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
+            rb.AddRelativeForce(jumpDirection.normalized * jumpForce, ForceMode.Impulse); 
+            jumpCount++;
+        }
+    }
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            jumpCount = 0;
         }
     }
 }

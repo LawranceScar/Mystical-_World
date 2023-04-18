@@ -38,7 +38,6 @@ public class UILifeSystems : MonoBehaviour
 
     void Start()
     {
-        StartMax();
         DeathText.enabled = true;
         // DeathScreen.text = " ";
     }
@@ -52,6 +51,7 @@ public class UILifeSystems : MonoBehaviour
 
     void Update()
     {
+        StartMax();
         StaminaAndHealthBarSystem();
         MpSystem();
         ColourChange();
@@ -99,11 +99,16 @@ public class UILifeSystems : MonoBehaviour
         {
             StaminaBar.fillAmount = Mathf.Lerp(StaminaBar.fillAmount, StaminaAmount / MaxStaminaAmount, LerpSpeed);
             //Debug.Log(StaminaBar.fillAmount);
+            Debug.Log("Jaaaaa");
+            Debug.Log(MaxStaminaAmount);
         }
         else
         {
             StaminaBar.fillAmount = MaxStaminaAmount;
-            
+            Debug.Log("Here");
+            Debug.Log(StaminaAmount);
+            Debug.Log(MaxStaminaAmount);
+
         }
 
         if (Health != MaxHealth)
@@ -152,15 +157,15 @@ public class UILifeSystems : MonoBehaviour
             ParameterAllHide(AllHudUI, AllTextUI, true);
 
             DeathText.enabled = false;
-            ANimator.enabled = false;
-            ANimator.SetBool(AnimationCheck, false);
+          //  ANimator.enabled = false;
+            // ANimator.SetBool(AnimationCheck, false);
         }
         else
         {
             ParameterAllHide(AllHudUI, AllTextUI, false);
-            ANimator.enabled = true;
+          //  ANimator.enabled = true;
             DeathText.enabled = true;
-            ANimator.SetBool(AnimationCheck, true);
+           // ANimator.SetBool(AnimationCheck, true);
         }
     }
 

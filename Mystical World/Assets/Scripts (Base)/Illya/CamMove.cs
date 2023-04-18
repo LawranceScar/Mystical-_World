@@ -13,6 +13,10 @@ public class CamMove : MonoBehaviour
     float xRotation;
     float yRotation;
 
+    private float Distance = 2.0f;
+
+    private Vector3 Offset = new Vector3 (0.0f, 1.0f, 0.0f);
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -29,9 +33,9 @@ public class CamMove : MonoBehaviour
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -80f, 90f);
 
-        transform.position = cameraPos.position;
+        transform.position = cameraPos.position - transform.forward * Distance + Offset;
 
         transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
-        orientation.rotation = Quaternion.Euler(0, yRotation, 0);
+        orientation.rotation = Quaternion.Euler(xRotation, yRotation, 0);
     }
 }

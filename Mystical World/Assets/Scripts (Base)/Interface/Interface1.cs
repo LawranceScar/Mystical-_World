@@ -10,4 +10,8 @@ namespace Assets.Scripts
     {
         public void TakerDamage(float damage);
     }
+    interface IHealable
+    {
+        public void Heal(float healamount);
+    }
 }
