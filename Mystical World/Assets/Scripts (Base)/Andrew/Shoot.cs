@@ -6,7 +6,6 @@ public class Shoot : MonoBehaviour
 {
     public GameObject Bullet;
     public Transform CubeTransform;
-    public Transform PivotTransform;
     public Transform MuzzleTransform;
     public Transform CameraTransform;
 
@@ -18,7 +17,7 @@ public class Shoot : MonoBehaviour
     void Update()
     {
         CameraTransform = Abud_Pistol.ShootCamera.transform;
-       
+        ShootBullet();
     }
 
     public void ShootBullet()
