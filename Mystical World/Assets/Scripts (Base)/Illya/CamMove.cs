@@ -33,7 +33,7 @@ public class CamMove : MonoBehaviour
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -80f, 90f);
 
-        transform.position = cameraPos.position - transform.forward * Distance + Offset;
+        //transform.position = cameraPos.position - transform.forward * Distance + Offset;
 
         transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
         orientation.rotation = Quaternion.Euler(xRotation, yRotation, 0);

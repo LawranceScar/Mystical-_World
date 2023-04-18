@@ -18,7 +18,7 @@ public class Shoot : MonoBehaviour
     void Update()
     {
         CameraTransform = Abud_Pistol.ShootCamera.transform;
-        ShootBullet();
+       
     }
 
     public void ShootBullet()
