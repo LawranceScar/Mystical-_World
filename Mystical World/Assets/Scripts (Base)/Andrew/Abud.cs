@@ -6,7 +6,7 @@ public class Abud : MonoBehaviour
 {
     public Transform Sword;
     float range = 3;
-    public static Camera Camera;
+    public Camera Camera;
     public bool IsSword;
     public GameObject TopSword;
     public GameObject SSword;
@@ -14,7 +14,6 @@ public class Abud : MonoBehaviour
     public bool What = ChangeSlots.WeaponF;
     void Start()
     {
-        Camera = GetComponent<Camera>();
     }
 
     void Update()
