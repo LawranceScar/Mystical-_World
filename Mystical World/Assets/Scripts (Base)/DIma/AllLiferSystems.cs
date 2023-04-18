@@ -15,9 +15,6 @@ public class AllLiferSystems : MonoBehaviour, IDamagable, IHealable
     [Header("Stamina Settings")]
 
     [SerializeField] protected int Stamina = 100; // Скільки всього стаміни 
-    [SerializeField] protected int DefaultStamina = 100; // Скільки всього стаміни 
-    [SerializeField] public float DefaultHP = 100;
-    [SerializeField] public int DefaultMP = 40;
     [SerializeField] protected int StaminaKiller = 1; // Скільки віднімається за раз
     [SerializeField] protected float TimerAmountKiller = 0.03f; // Скільки часу на перезарядку самої стаміни при використанні
     [SerializeField] protected float TimerRespawnStaminaAmount = 3.0f; // Скільки часу стаміна робить reload

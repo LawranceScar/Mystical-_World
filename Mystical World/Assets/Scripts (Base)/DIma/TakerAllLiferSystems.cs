@@ -8,18 +8,18 @@ public class TakerAllLiferSystems : AllLiferSystems
     public float GetHealthDefault()
     {
       //  DefaultHP = Health;
-        return DefaultHP;
+        return HealthPlayer;
     }
 
     public int GetStaminaDefault()
     {
-        return DefaultStamina;
+        return Stamina;
     }
 
     public int GetMperDefault()
     {
      //   DefaultMP = MpAmount;
-        return DefaultMP;
+        return Mana;
     }
 
     public float Healther()
