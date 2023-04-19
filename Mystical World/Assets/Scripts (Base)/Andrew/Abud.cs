@@ -5,7 +5,7 @@ using UnityEngine;
 public class Abud : MonoBehaviour
 {
     public Transform Sword;
-    float range = 3;
+    float range = 20;
     public Camera Camera;
     public bool IsSword;
     public GameObject TopSword;
@@ -20,14 +20,13 @@ public class Abud : MonoBehaviour
     {
         RaycastHit hit;
        
-        if (Physics.Raycast(Camera.transform.position, Camera.transform.forward, out hit, range) && Input.GetKey(KeyCode.E) && IsSword == false && hit.transform.tag == "Sword")
+        if (Physics.Raycast(Camera.transform.position, Camera.transform.forward, out hit, range) && Input.GetKey(KeyCode.E) && hit.transform.tag == "Sword")
         {
             GiveSword(hit.transform);
-            IsSword = true; 
             TopSword = hit.transform.gameObject;
             
         }
-        if (IsSword == true && Physics.Raycast(Camera.transform.position, Camera.transform.forward, out hit, range) && Input.GetKey(KeyCode.E) && hit.transform.tag == "Sword")
+        if ( Physics.Raycast(Camera.transform.position, Camera.transform.forward, out hit, range) && Input.GetKey(KeyCode.E) && hit.transform.tag == "Sword")
         {
 
             Drop(TopSword.transform);

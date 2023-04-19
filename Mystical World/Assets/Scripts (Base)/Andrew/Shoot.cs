@@ -17,7 +17,6 @@ public class Shoot : MonoBehaviour
     void Update()
     {
         CameraTransform = Abud_Pistol.ShootCamera.transform;
-        ShootBullet();
     }
 
     public void ShootBullet()
@@ -30,7 +29,7 @@ public class Shoot : MonoBehaviour
             
 
         }
-        if (Input.GetAxis("Fire1") == 1.0f && Time.time >= ShootTime)
+        if (Time.time >= ShootTime)
         {
             ShootTime = Time.time + ShootDelay;
 

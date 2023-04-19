@@ -6,7 +6,7 @@ public class Abud_Pistol : MonoBehaviour
 {
     
     public Transform hand;
-    float range = 5;
+    float range = 20;
     public GameObject Camera;
     public static GameObject ShootCamera;
     private bool IsPistol;
@@ -37,9 +37,13 @@ public class Abud_Pistol : MonoBehaviour
         } 
          Shoot ShootRef = TopPistol.GetComponent<Shoot>();
             if(ShootRef != null)
-            {
-                ShootRef.ShootBullet();
-            }
+                {
+                   if(Input.GetKey(KeyCode.Mouse0))
+                    {
+                        Debug.Log(123123);
+                        ShootRef.ShootBullet();
+                    }
+                }
     }
     public void GetPistol(Transform pistol)
     {
