@@ -99,15 +99,15 @@ public class UILifeSystems : MonoBehaviour
         {
             StaminaBar.fillAmount = Mathf.Lerp(StaminaBar.fillAmount, StaminaAmount / MaxStaminaAmount, LerpSpeed);
             //Debug.Log(StaminaBar.fillAmount);
-            Debug.Log("Jaaaaa");
-            Debug.Log(MaxStaminaAmount);
+           // Debug.Log("Jaaaaa");
+           // Debug.Log(MaxStaminaAmount);
         }
         else
         {
             StaminaBar.fillAmount = MaxStaminaAmount;
-            Debug.Log("Here");
-            Debug.Log(StaminaAmount);
-            Debug.Log(MaxStaminaAmount);
+           // Debug.Log("Here");
+           // Debug.Log(StaminaAmount);
+           // Debug.Log(MaxStaminaAmount);
 
         }
 
