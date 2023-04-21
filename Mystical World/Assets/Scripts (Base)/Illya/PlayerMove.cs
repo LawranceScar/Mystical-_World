@@ -6,18 +6,18 @@ public class PlayerMove : MonoBehaviour
 {
     public float moveForce;
     public float jumpForce;
-    public Transform orientation;
 
     private float horizontalInput;
     private float verticalInput;
     private float jumpInput;
 
-    private int maxJumpCount = 2;
-    private int jumpCount = 0;
+    private bool isCanJump;
 
     Vector3 moveDirection;
     Vector3 jumpDirection;
     Rigidbody rb;
+
+    public Transform Camera;
 
     private void Start()
     {
@@ -28,10 +28,14 @@ public class PlayerMove : MonoBehaviour
     {
         MovePlayer();
         JumpPlayer();
+
     }
     private void Update()
     {
         MyInput();
+        transform.localEulerAngles = new Vector3(transform.localEulerAngles.x,
+                                                 Camera.localEulerAngles.y,
+                                                 transform.localEulerAngles.z);
     }
     private void MyInput()
     {
@@ -41,24 +45,32 @@ public class PlayerMove : MonoBehaviour
     }
     private void MovePlayer()
     {
-        moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+        moveDirection = new Vector3(moveForce * horizontalInput, 0, moveForce * verticalInput);
+        Debug.Log(moveDirection);
+        rb.AddRelativeForce(moveDirection, ForceMode.Force);
 
-        rb.AddRelativeForce(moveDirection.normalized * moveForce, ForceMode.Force);
     }
     private void JumpPlayer()
     {
-        jumpDirection = orientation.up * jumpInput;
-        if(jumpCount <= maxJumpCount  && jumpInput > 0)
+        jumpDirection = transform.up * jumpInput;
+        if (isCanJump)
         {
-            rb.AddRelativeForce(jumpDirection.normalized * jumpForce, ForceMode.Impulse); 
-            jumpCount++;
+            rb.AddRelativeForce(jumpDirection.normalized * jumpForce, ForceMode.Impulse);
         }
     }
     private void OnCollisionStay(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
-            jumpCount = 0;
+            isCanJump = true;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isCanJump = false;
         }
     }
 }
