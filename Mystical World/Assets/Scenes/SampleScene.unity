@@ -218,9 +218,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec1226e4c32d7543a18a9a5c1d35466, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveForce: 10
-  jumpForce: 0
-  orientation: {fileID: 182138043}
+  moveForce: 500
+  jumpForce: 10
+  Camera: {fileID: 963194228}
 --- !u!136 &182138040
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -309,8 +309,8 @@ Rigidbody:
   m_GameObject: {fileID: 182138038}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 2
-  m_AngularDrag: 2
+  m_Drag: 15
+  m_AngularDrag: 0.5
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -487,8 +487,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 50, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 170, y: 555, z: 150}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -507,10 +507,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4021c484c34499543ba1e2b5565378b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensX: 40
-  sensY: 40
-  orientation: {fileID: 963194228}
-  cameraPos: {fileID: 182138043}
+  Target: {fileID: 182138043}
 --- !u!1001 &7738171011463280464
 PrefabInstance:
   m_ObjectHideFlags: 0
