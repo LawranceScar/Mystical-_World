@@ -4,8 +4,25 @@ using UnityEngine;
 
 public class BulletScript : MonoBehaviour
 {
+    private void Start()
+    {
+        
+    }
+    private void Update()
+    {
+        
+    }
+    public float Damage;
     private void OnCollisionEnter(Collision collision)
     {
-        Destroy(this.gameObject);
+       
+    }
+    public void takedamage(float damage)
+    {
+        Damage = damage;
+    }
+    public void damage(float hp)
+    {
+        hp -= Damage;
     }
 }

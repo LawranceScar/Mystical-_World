@@ -12,10 +12,12 @@ public class Shoot : MonoBehaviour
     public float BulletSpeed = 700.0f;
     public float ShootTime = 0.0f;
     public float ShootDelay = 0.1f;
+    float damage = 30;
 
 
     void Update()
     {
+        
         CameraTransform = Abud_Pistol.ShootCamera.transform;
         if(Input.GetAxis("Fire1") == 1)
         {
@@ -38,9 +40,16 @@ public class Shoot : MonoBehaviour
             ShootTime = Time.time + ShootDelay;
 
             GameObject newBullet = Instantiate(Bullet, MuzzleTransform.position, Quaternion.LookRotation(TargetPoint - CubeTransform.position));
+           
             Destroy(newBullet, 10.0f);
 
             Rigidbody newBulletRB = newBullet.GetComponent<Rigidbody>();
+
+
+            BulletScript MyB = newBullet.GetComponent<BulletScript>();
+            MyB.takedamage(damage);
+
+
             newBulletRB.AddForce(newBullet.transform.forward * BulletSpeed, ForceMode.Impulse);
 
 
