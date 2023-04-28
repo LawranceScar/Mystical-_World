@@ -14,6 +14,7 @@ public class MainPatrol : CandiceAIController
     public static bool IsWalking;
 
 
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
