@@ -15,7 +15,6 @@ public class BulletScript : MonoBehaviour
     public float Damage;
     private void OnCollisionEnter(Collision collision)
     {
-       
     }
     public void takedamage(float damage)
     {

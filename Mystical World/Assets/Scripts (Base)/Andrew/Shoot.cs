@@ -19,10 +19,11 @@ public class Shoot : MonoBehaviour
     {
         
         CameraTransform = Abud_Pistol.ShootCamera.transform;
-        if(Input.GetAxis("Fire1") == 1)
+        if (Input.GetAxis("Fire1") == 1)
         {
             ShootBullet();
         }
+            
     }
 
     public void ShootBullet()

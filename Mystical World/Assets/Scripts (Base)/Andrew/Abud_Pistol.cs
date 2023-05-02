@@ -35,15 +35,17 @@ public class Abud_Pistol : MonoBehaviour
             GetPistol(hit.transform);
             TopPistol = hit.transform.gameObject;
         }
+        
         Shoot ShootRef = TopPistol.GetComponent<Shoot>();
-        //if(Input.GetAxis("Fire1") == 1)
-        //{
-        //    Debug.Log("Oh");
-         //   if (ShootRef != null)
-             //   {
-             //           ShootRef.ShootBullet();
-               // }
-        //}
+       
+        
+        if(Input.GetAxis("Fire1") == 1)
+        {
+            if (ShootRef != null)
+                {
+                ShootRef.ShootBullet();
+                }
+        }
     }
     public void GetPistol(Transform pistol)
     {
