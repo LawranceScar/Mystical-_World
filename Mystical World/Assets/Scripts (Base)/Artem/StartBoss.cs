@@ -6,7 +6,7 @@ public class StartBoss : MonoBehaviour
 {
     [SerializeField] Transform Taget;
     private Rigidbody RBOfBoss;
-    private float BossSpeed = 18;
+    private float BossSpeed = 1000;
     public bool CanMove = false;
     private bool CanAttack = false;
     void Start()
@@ -19,7 +19,7 @@ public class StartBoss : MonoBehaviour
         if (CanMove)
         {
             this.transform.rotation = Quaternion.LookRotation(Taget.position - this.transform.position);
-            RBOfBoss.AddForce(this.transform.forward * BossSpeed, ForceMode.Force);
+            RBOfBoss.AddForce(this.transform.forward.normalized * BossSpeed, ForceMode.Force);
         }
         if (CanAttack)
         {
