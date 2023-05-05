@@ -37,8 +37,6 @@ public class Abud_Pistol : MonoBehaviour
         }
         
         Shoot ShootRef = TopPistol.GetComponent<Shoot>();
-       
-        
         if(Input.GetAxis("Fire1") == 1)
         {
             if (ShootRef != null)
