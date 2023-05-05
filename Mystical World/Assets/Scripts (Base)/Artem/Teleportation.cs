@@ -7,8 +7,6 @@ public class Teleportation : MonoBehaviour
     [SerializeField] List<Transform> Teleports = new List<Transform>();
 
     static private List<bool> IsActiv = new List<bool>();
-    
-    private bool CanUse = false;
 
     static private int Index = 0;
 
@@ -24,18 +22,19 @@ public class Teleportation : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.T))
         {
-            if (!CanUse)
+            if (IsActiv[Index])
             {
-                CanUse = true;
-                Debug.Log("Can Use");
+                Player.position = Teleports[Index].position;
             }
-            else if (CanUse)
+            if (Index < Teleports.Count - 1)
             {
-                CanUse = false;
-                Debug.Log("Cant Use");
+                Index++;
+            }
+            else
+            {
+                Index = 0;
             }
         }
-        ChangePosition();
 
         
     }
@@ -56,21 +55,6 @@ public class Teleportation : MonoBehaviour
      private void ChangePosition()
      {
 
-        if (Input.GetAxis("Fire1") > 0)
-        {
-            if (CanUse && IsActiv[Index])
-            {
-                Player.position = Teleports[Index].position;
-            }
-            if (Index > Teleports.Count - 1)
-            {
-                Index++;
-            }
-            if (Index == Teleports.Count - 1)
-            {
-                Index = 0;
-            }
-        }
      }
 
     private void NextIndex()
