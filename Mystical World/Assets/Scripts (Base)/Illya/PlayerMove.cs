@@ -46,7 +46,6 @@ public class PlayerMove : MonoBehaviour
     private void MovePlayer()
     {
         moveDirection = new Vector3(moveForce * horizontalInput, 0, moveForce * verticalInput);
-        Debug.Log(moveDirection);
         rb.AddRelativeForce(moveDirection, ForceMode.Force);
 
     }

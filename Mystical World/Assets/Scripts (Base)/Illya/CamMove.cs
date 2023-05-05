@@ -7,7 +7,6 @@ public class CamMove : MonoBehaviour
     public Transform Target; // ціль за якою слідкую камера
 
     private float Distance = 2.0f;
-    public float MousceSens = 2.0f;
 
     private Vector3 Offset = new Vector3(0.0f, 1.0f, 0.0f);
 
@@ -22,7 +21,7 @@ public class CamMove : MonoBehaviour
     {
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
-        transform.localEulerAngles = new Vector3(transform.localEulerAngles.x - mouseY * MousceSens, transform.localEulerAngles.y + mouseX * MousceSens, 0.0f);
+        transform.localEulerAngles = new Vector3(transform.localEulerAngles.x + mouseY * 10, transform.localEulerAngles.y - mouseX * 10, 0.0f); // процес обертання
         transform.position = Target.position - transform.forward * Distance  + transform.right + Offset;
     }
 }
