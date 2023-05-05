@@ -11,8 +11,10 @@ public class Abud_Pistol : MonoBehaviour
     public static GameObject ShootCamera;
     private bool IsPistol;
     public GameObject TopPistol;
+    Shoot ShootRef;
     void Start()
     {
+        
         ShootCamera = Camera;
     }
     
@@ -21,27 +23,24 @@ public class Abud_Pistol : MonoBehaviour
     {
        
         RaycastHit hit;
-        if(Physics.Raycast(Camera.transform.position, Camera.transform.forward, out hit, range) && Input.GetKey(KeyCode.E) && hit.transform.tag == "Pistol" && IsPistol == false)
+       
+        if(Physics.Raycast(Camera.transform.position, Camera.transform.forward, out hit, range) && Input.GetKey(KeyCode.E) && hit.transform.tag == "Pistol")
         {
-            Debug.Log(hit.transform.name);
-            GetPistol(hit.transform);
+            if (IsPistol)
+            {
+                DropPistol(TopPistol.transform);
+            }
             TopPistol = hit.transform.gameObject;
-            IsPistol = true;
-           
-        }
-        if(Physics.Raycast(Camera.transform.position, Camera.transform.forward, out hit, range) && Input.GetKey(KeyCode.E) && hit.transform.tag == "Pistol" && IsPistol == true)
-        {
-            DropPistol(TopPistol.transform);
+            ShootRef = TopPistol.GetComponent<Shoot>();
             GetPistol(hit.transform);
-            TopPistol = hit.transform.gameObject;
+
         }
-        
-        Shoot ShootRef = TopPistol.GetComponent<Shoot>();
         if(Input.GetAxis("Fire1") == 1)
         {
+            Debug.Log(ShootRef);
             if (ShootRef != null)
                 {
-                ShootRef.ShootBullet();
+                    ShootRef.ShootBullet();
                 }
         }
     }
