@@ -13,9 +13,9 @@ public class Takedamage : MonoBehaviour
    
     void Update()
     {
+
        if(hp <= 0)
         {
-            Destroy(this.gameObject);
         }
     }
     private void OnCollisionEnter(Collision collision)
@@ -25,5 +25,6 @@ public class Takedamage : MonoBehaviour
             BulletScript Myb = collision.gameObject.GetComponent<BulletScript>();
             hp = hp - Myb.Damage;
         }
+       
     }
 }
