@@ -6,7 +6,7 @@ public class StartBoss : MonoBehaviour
 {
     [SerializeField] Transform Taget;
     private Rigidbody RBOfBoss;
-    private float BossSpeed = 1000;
+    private float BossSpeed = 5000;
     public bool CanMove = false;
     private bool CanAttack = false;
     void Start()
