@@ -16,6 +16,7 @@ public class Takedamage : MonoBehaviour
 
         if (hp <= 0)
         {
+            Destroy(this.gameObject);
         }
     }
     private void OnCollisionEnter(Collision collision)
@@ -26,12 +27,6 @@ public class Takedamage : MonoBehaviour
             BulletScript Myb = collision.gameObject.GetComponent<BulletScript>();
             hp = hp - Myb.Damage;
 
-        }
-        if (collision.gameObject.CompareTag("Sword"))
-        {
-
-            Sworddamage myg = collision.gameObject.GetComponent<Sworddamage>();
-            hp = hp - myg.damage;
         }
     }
 }
