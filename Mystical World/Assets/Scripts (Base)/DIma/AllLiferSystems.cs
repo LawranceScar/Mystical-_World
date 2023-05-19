@@ -50,9 +50,21 @@ public class AllLiferSystems : MonoBehaviour, IDamagable, IHealable
     {
         Health = Health - damage;
     }
-    public void Heal(float heal)
+    public void Heal(float heal, float timerHeal, float DefaultTimerHeal)
     {
-        Health = Health + heal;
+        if (timerHeal == -1)
+        {
+            Health = Health + heal;
+        }
+        else
+        {
+            timerHeal -= Time.deltaTime;
+            if (timerHeal == 0)
+            {
+                Health = Health + heal;
+                timerHeal = DefaultTimerHeal;
+            }
+        }
     }
 
     void Start()
