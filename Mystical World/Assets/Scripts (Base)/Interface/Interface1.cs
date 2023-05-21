@@ -12,6 +12,6 @@ namespace Assets.Scripts
     }
     interface IHealable
     {
-        public void Heal(float healamount, float TimerHeal, float DefaultTimerHeal);
+        public void Heal(float healamount);
     }
 }

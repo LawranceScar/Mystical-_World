@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Assets.Scripts;
 
 namespace CandiceAIforGames.AI
 {
@@ -44,7 +45,7 @@ namespace CandiceAIforGames.AI
     #endregion
     //New inheritance chain from CandiceAnimationManager, which in turns inherits from MonoBehaviour. 
     //Scene Manager will override all aspects on future releases
-    public class CandiceAIController : CandiceAnimationManager
+    public class CandiceAIController : CandiceAnimationManager, IDamagable
     {
 
         #region Member Variables
@@ -55,7 +56,7 @@ namespace CandiceAIforGames.AI
         [SerializeField]
         private int agentID;
         [SerializeField]
-        private float maxHitPoints = 100f;
+        public float maxHitPoints = 100f;
         [SerializeField]
         public float hitPoints = 100f;
         [SerializeField]
@@ -159,6 +160,17 @@ namespace CandiceAIforGames.AI
         private float headLookIntensity = 1f;
         [SerializeField]
         private CandiceWaypoint waypoint;
+        [SerializeField]
+        private MainPatrol PatrolPoints;
+        [SerializeField]
+        private Transform[] PointsFor;
+
+        private int destPoint = 0;
+        [SerializeField]
+        public float WaitingTime = 1f;
+        private float SaveWaiting;
+        public bool IsWalking;
+
 
         /*
          * Pathfinding Variables
@@ -212,6 +224,8 @@ namespace CandiceAIforGames.AI
         private bool hasAttackAnimation = false;
         [SerializeField]
         public bool isAttacking = false;
+
+        private float DefaultAttackPerSecond = 1f;
 
         /*
          * Modules
@@ -270,6 +284,7 @@ namespace CandiceAIforGames.AI
         public float HitPoints { get => hitPoints; set => hitPoints = value; }
         public bool IsCalculatingPath { get => isCalculatingPath; set => isCalculatingPath = value; }
         public bool IsFollowingPath { get => isFollowingPath; set => isFollowingPath = value; }
+        public float waittime { get => WaitingTime; set => WaitingTime = value; }
         public Vector3 LookPoint { get => lookPoint; set => lookPoint = value; }
         public bool DrawAgentPath { get => drawAgentPath; set => drawAgentPath = value; }
         public float RotationSpeed { get => rotationSpeed; set => rotationSpeed = value; }
@@ -293,6 +308,14 @@ namespace CandiceAIforGames.AI
         void Start()
         {
             agent = GetComponent<NavMeshAgent>();
+
+            agent.autoBraking = false;
+
+            GotoNextPoint();
+
+            SaveWaiting = WaitingTime;
+
+            DefaultAttackPerSecond = attacksPerSecond;
             //Check if there is a Candice AI Manager Component in the scene.
             candice = FindObjectOfType<CandiceAIManager>();
             if (candice == null)
@@ -312,20 +335,71 @@ namespace CandiceAIforGames.AI
             InitializeAnimations();
         }
 
+        public void TakerDamage(float damage)
+        {
+            HitPoints = HitPoints - damage;
+        }
+
 
         // Update is called once per frame
         void Update()
         {
+            DieFunc();
             if (player.gameObject != null)
             {
                 ray = new Ray(transform.position, player.transform.position - transform.position);
             }
+             AttackCheckAndKill();
             if (BehaviorTree != null)
                 BehaviorTree.Evaluate();
 
             //New Animations Assessment
             Animate();
 
+            GotoIf();
+
+
+
+        }
+
+        public void GotoIf()
+        {
+            if (IsWalking == false)
+            {
+                if (!agent.pathPending && agent.remainingDistance < 10f)
+                {
+                    WaitingTime -= Time.deltaTime;
+                    if (WaitingTime <= 0)
+                    {
+                        agent.isStopped = false;
+                        GotoNextPoint();
+                        WaitingTime = SaveWaiting;
+                    }
+                    else
+                    {
+                        agent.isStopped = true;
+                    }
+                }
+            }
+        }
+
+        void GotoNextPoint()
+        {
+
+            if (PointsFor.Length == 0)
+                return;
+
+            agent.destination = PointsFor[destPoint].position;
+
+            destPoint = (destPoint + 1) % PointsFor.Length;
+        }
+
+        private void DieFunc()
+        {
+            if (HitPoints <= 0)
+            {
+                Destroy(this.gameObject);
+            }
         }
         #region Helper Methods 
         /// <summary>
@@ -494,22 +568,29 @@ namespace CandiceAIforGames.AI
 
         public void AttackMelee()
         {
-            if (hasAttackAnimation && !IsAttacking)
+            if (hasAttackAnimation && !IsAttacking) //REAL ATACK
             {
                 //Play attack animation which will call the DealDamage() function in the combat module
                 IsAttacking = true;
             }
             else if (!IsAttacking)
             {
+                Debug.Log("Real ATTACK"); //RealTime
                 IsAttacking = true;
                 if (is3D)
-                    StartCoroutine(combatModule.DealTimedDamage(AttackSpeed, AttackDamage, AttackRange, DamageAngle, enemyTags));                    
+
+                    StartCoroutine(combatModule.DealTimedDamage(AttackSpeed, AttackDamage, AttackRange, DamageAngle, enemyTags));
                 else
                     StartCoroutine(combatModule.DealTimedDamage2D(AttackSpeed, AttackDamage, AttackRange, DamageAngle, enemyTags)); //Receive 
                 
 
             }
+            else
+            {
+                IsAttacking = false;
+            }
         }
+
         public void AttackRanged()
         {
             if (hasAttackAnimation && !IsAttacking)
@@ -524,9 +605,42 @@ namespace CandiceAIforGames.AI
             }
         }
 
+        private void AttackCheckAndKill()
+        {
+            if (AllLiferSystems.IsDead == false)
+            {
+                if (IsAttacking == true)
+                {
+                    Debug.Log(attacksPerSecond);
+                    Debug.Log(DefaultAttackPerSecond);
+                    attacksPerSecond -= Time.deltaTime;
+                    if (attacksPerSecond <= 0)
+                    {
+                        NormalReceiveDamage(mainTarget.gameObject);
+                        agent.isStopped = true;
+                        attacksPerSecond = DefaultAttackPerSecond;
+                        IsAttacking = false;
+                    }
+                }
+                else
+                {
+                    IsAttacking = false;
+                }
+            }
+            else
+            {
+                IsAttacking = false;
+                agent.isStopped = false;
+            }
+        }
+
         private void OnCollisionStay(Collision collision)
         {
-            NormalReceiveDamage(collision.gameObject);
+          /*  if (IsAttacking == true)
+            {
+                agent.isStopped = true;
+                NormalReceiveDamage(collision.gameObject);
+            } */
         }
 
         public void NormalReceiveDamage(GameObject DamagableObject)

@@ -56,9 +56,12 @@ public class EnemySpawners : MonoBehaviour
                     {
                         MaxAmountEnemies = MaxAmountEnemies - DeleteAmount;
                         var enemy = Instantiate(enemyPrefab, transform.position, transform.rotation);
-                        var spawn_fx = Instantiate(SpawnFx, new Vector3(transform.position.x - 0.4f, transform.position.y - 0.3f, 1), transform.rotation);
-                        spawn_fx.transform.SetParent(enemy.transform);
-                        Destroy(spawn_fx, 2f);
+                        if (SpawnFx != null)
+                        {
+                            var spawn_fx = Instantiate(SpawnFx, new Vector3(transform.position.x - 0.4f, transform.position.y - 0.3f, 1), transform.rotation);
+                            spawn_fx.transform.SetParent(enemy.transform);
+                            Destroy(spawn_fx, 2f);
+                        }
                     }
 
                 }

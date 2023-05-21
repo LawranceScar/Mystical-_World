@@ -50,9 +50,6 @@ namespace CandiceAIforGames.AI
                 {
                     CompareTags(go, request.detectionTags, ref detectedObjects);
                 }
-                
-                
-
             }
             objectDetectedCallback(new CandiceDetectionResults(detectedObjects));
         }

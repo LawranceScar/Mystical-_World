@@ -48,22 +48,13 @@ public class AllLiferSystems : MonoBehaviour, IDamagable, IHealable
 
     public void TakerDamage(float damage)
     {
-        Health = Health - damage;
+      Health = Health - damage;
     }
-    public void Heal(float heal, float timerHeal, float DefaultTimerHeal)
+    public void Heal(float heal)
     {
-        if (timerHeal == -1)
+        if (IsDead == false)
         {
-            Health = Health + heal;
-        }
-        else
-        {
-            timerHeal -= Time.deltaTime;
-            if (timerHeal == 0)
-            {
                 Health = Health + heal;
-                timerHeal = DefaultTimerHeal;
-            }
         }
     }
 

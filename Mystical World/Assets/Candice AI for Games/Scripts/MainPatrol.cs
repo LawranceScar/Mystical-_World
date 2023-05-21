@@ -7,11 +7,13 @@ using CandiceAIforGames.AI;
 
 public class MainPatrol : CandiceAIController
 {
-    public Transform[] points;
+   /* public Transform[] points;
     private int destPoint = 0;
     private NavMeshAgent agent;
+    public float WaitingTime = 1f;
+    private float SaveWaiting;
 
-    public static bool IsWalking;
+    public static bool IsWalking; 
 
 
 
@@ -22,6 +24,8 @@ public class MainPatrol : CandiceAIController
         agent.autoBraking = false;
 
         GotoNextPoint();
+
+        SaveWaiting = WaitingTime; 
     }
 
 
@@ -39,12 +43,22 @@ public class MainPatrol : CandiceAIController
 
     void Update()
     {
+        GotoIf();
+    }
+
+    public void GotoIf()
+    {
         if (IsWalking == false)
         {
             if (!agent.pathPending && agent.remainingDistance < 0.5f)
             {
-                GotoNextPoint();
+                WaitingTime -= Time.deltaTime;
+                if (WaitingTime <= 0)
+                {
+                    GotoNextPoint();
+                    WaitingTime = SaveWaiting;
+                }
             }
         }
-    }
+    } */
 }

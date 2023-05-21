@@ -15,6 +15,7 @@ namespace CandiceAIforGames.AI.Editors
         private CandiceAIController character;
         private SerializedObject soTarget;
         private SerializedProperty soBehaviorTree;
+        public Transform[] objects;
 
         GUIContent[] arrTabs = new GUIContent[4];
         GUIContent[] arrTabsSettings = new GUIContent[2];
@@ -376,7 +377,9 @@ namespace CandiceAIforGames.AI.Editors
             label = new GUIContent("Base Rotation Speed", "The base speed at which the agent rotate to face its target.");
             character.RotationSpeed = EditorGUILayout.FloatField(label, character.RotationSpeed);
             label = new GUIContent("Waypoint:", "The current Waypoint that the agent will follow.");
-            character.Waypoint = (CandiceWaypoint)EditorGUILayout.ObjectField(label, character.Waypoint, typeof(CandiceWaypoint), true);
+           // character.Waypoint = (CandiceWaypoint)EditorGUILayout.ObjectField(label, character.Waypoint, typeof(CandiceWaypoint), true);
+            // character.patrolpoints = (Transform[])EditorGUILayout.ObjectField("root", character.patrolpoints, typeof(Transform[]), true) as Transform[];
+            //pointer
             GUILayout.Space(16);
 
             GUILayout.BeginHorizontal();
@@ -384,7 +387,29 @@ namespace CandiceAIforGames.AI.Editors
             GUILayout.BeginVertical("box");
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            GUILayout.Label("Candice Pathfind Settings", EditorStyles.boldLabel);
+            GUILayout.Label("Waypoint Patrol", EditorStyles.boldLabel);
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("PointsFor"), true);
+            label = new GUIContent("WaitTime", "Waiting time to go to next point");
+
+            character.waittime = EditorGUILayout.FloatField(label, character.waittime);
+
+            serializedObject.ApplyModifiedProperties();
+
+
+
+            GUILayout.EndVertical();
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            GUILayout.BeginVertical("box");
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            GUILayout.Label("Don't touch", EditorStyles.boldLabel);
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
             label = new GUIContent("Turn Speed", "The speed the agent will turn between waypoints by when pathfinding.");
@@ -398,6 +423,7 @@ namespace CandiceAIforGames.AI.Editors
             label = new GUIContent("Path Update Move Threshold", "Minimum distance the target can move by before requesting a new Updated path from Candice.");
             character._pathUpdateMoveThreshold = EditorGUILayout.FloatField(label, character._pathUpdateMoveThreshold);
             character.DrawAgentPath = EditorGUILayout.Toggle("Draw Agent Path", character.DrawAgentPath);
+            // EditorGUILayout.PropertyField(serializedObject.FindProperty("objects"), true);
             GUILayout.EndVertical();
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();

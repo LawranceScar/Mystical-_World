@@ -39,6 +39,7 @@ public class Shoot : MonoBehaviour
             GameObject newBullet = Instantiate(Bullet, MuzzleTransform.position, Quaternion.LookRotation(TargetPoint - CubeTransform.position));
            
             Destroy(newBullet, 10.0f);
+            
 
             Rigidbody newBulletRB = newBullet.GetComponent<Rigidbody>();
 

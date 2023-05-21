@@ -1,27 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Scripts;
 
 public class Sworddamage : MonoBehaviour
 {
-    public  float damage = 30;
-    void Start()
-    {
-        
-    }
+    public float damage = 30;
 
-    void Update()
-    {
-        
-    }
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.gameObject.name);
-        if (other.gameObject.CompareTag("E"))
-        {
-            Takedamage edmg = other.gameObject.GetComponent<Takedamage>();
+        DamagableGameObject(other.gameObject);
+        Debug.Log("Gitler");
+    }
 
-            edmg.hp = edmg.hp - damage;
+    private void DamagableGameObject(GameObject DamagableObject)
+    {
+        IDamagable IDamagableObject = DamagableObject.GetComponent<IDamagable>();
+        if (IDamagableObject != null)
+        {
+            IDamagableObject.TakerDamage(damage); //ReceiveRealDamage
         }
     }
 

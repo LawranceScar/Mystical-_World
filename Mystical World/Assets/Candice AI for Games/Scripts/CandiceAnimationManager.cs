@@ -147,7 +147,7 @@ namespace CandiceAIforGames.AI
                 candiceCamera = new CandiceCamera();
             }
             //Set main camera      
-            if (mainCam == null) {
+            if (mainCam != null) {
                 Transform camTransform = Camera.main.gameObject.transform;
                 if(camTransform.parent != null)
                 {
@@ -216,7 +216,7 @@ namespace CandiceAIforGames.AI
             //set the agent on the UI element
             candiceUI.thisAgent = thisAgent.gameObject;
             //if agent has no healthbar
-            if (HealthBar == null) {
+            if (HealthBar != null) {
                 //if agent is player
                 if (thisAgent.gameObject.tag == "Player")
                 {
