@@ -59,6 +59,9 @@ namespace CandiceAIforGames.AI
         public float maxHitPoints = 100f;
         [SerializeField]
         public float hitPoints = 100f;
+
+        [SerializeField]
+        FloatingEnemyHealthBar healthbar;
         [SerializeField]
         private float halfHeight = 100f;
         [SerializeField]
@@ -161,11 +164,12 @@ namespace CandiceAIforGames.AI
         [SerializeField]
         private CandiceWaypoint waypoint;
         [SerializeField]
-        private MainPatrol PatrolPoints;
-        [SerializeField]
         private Transform[] PointsFor;
 
         private int destPoint = 0;
+
+        private float SphereMax = 3;
+
         [SerializeField]
         public float WaitingTime = 1f;
         private float SaveWaiting;
@@ -285,6 +289,7 @@ namespace CandiceAIforGames.AI
         public bool IsCalculatingPath { get => isCalculatingPath; set => isCalculatingPath = value; }
         public bool IsFollowingPath { get => isFollowingPath; set => isFollowingPath = value; }
         public float waittime { get => WaitingTime; set => WaitingTime = value; }
+        public float sphrmax { get => SphereMax; set => SphereMax = value; }
         public Vector3 LookPoint { get => lookPoint; set => lookPoint = value; }
         public bool DrawAgentPath { get => drawAgentPath; set => drawAgentPath = value; }
         public float RotationSpeed { get => rotationSpeed; set => rotationSpeed = value; }
@@ -307,6 +312,8 @@ namespace CandiceAIforGames.AI
         // Start is called before the first frame update
         void Start()
         {
+            healthbar = GetComponentInChildren<FloatingEnemyHealthBar>();
+
             agent = GetComponent<NavMeshAgent>();
 
             agent.autoBraking = false;
@@ -338,12 +345,14 @@ namespace CandiceAIforGames.AI
         public void TakerDamage(float damage)
         {
             HitPoints = HitPoints - damage;
+            healthbar.UpdateBar(HitPoints, MaxHitPoints);
         }
 
 
         // Update is called once per frame
         void Update()
         {
+            CastSphere();
             DieFunc();
             if (player.gameObject != null)
             {
@@ -366,7 +375,7 @@ namespace CandiceAIforGames.AI
         {
             if (IsWalking == false)
             {
-                if (!agent.pathPending && agent.remainingDistance < 10f)
+                if (!agent.pathPending && agent.remainingDistance < SphereMax) // GotoPointAgentUpdate
                 {
                     WaitingTime -= Time.deltaTime;
                     if (WaitingTime <= 0)
@@ -382,6 +391,8 @@ namespace CandiceAIforGames.AI
                 }
             }
         }
+
+
 
         void GotoNextPoint()
         {
@@ -863,7 +874,14 @@ namespace CandiceAIforGames.AI
 
         public void OnDrawGizmos()
         {
-            if(candice != null && (candice.DrawAllAgentPaths || DrawAgentPath))
+            foreach (var point in PointsFor)
+            {
+                Gizmos.color = Color.blue;
+                Gizmos.DrawWireSphere(point.transform.position, SphereMax);
+            }
+             
+
+            if (candice != null && (candice.DrawAllAgentPaths || DrawAgentPath))
             {
                 if (_path != null)
                 {
@@ -884,6 +902,14 @@ namespace CandiceAIforGames.AI
                 }
             }
             
+        }
+
+        void CastSphere()
+        {
+           /* if (Physics.SphereCast(PointsFor[0].transform.position, SphereMax, -transform.up, out hiter, maxDistance, layerMask))
+            {
+                Debug.Log(hiter.collider.gameObject);
+            } */
         }
 
         public void OnCollisionEnter(Collision col)

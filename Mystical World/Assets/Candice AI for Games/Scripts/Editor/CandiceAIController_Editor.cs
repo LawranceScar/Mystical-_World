@@ -62,18 +62,11 @@ namespace CandiceAIforGames.AI.Editors
             GUILayout.FlexibleSpace();
 
             style.normal.textColor = Color.red;
-            Texture2D image = (Texture2D)Resources.Load("CandiceLogo");
-            GUIContent label = new GUIContent(image);
-            GUILayout.Label(label);
 
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-
-            label = new GUIContent("Candice AI Controller");
-            guiStyle.normal.textColor = EditorStyles.label.normal.textColor;
-            GUILayout.Label(label, guiStyle);
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
             GUILayout.Space(6);
@@ -395,6 +388,9 @@ namespace CandiceAIforGames.AI.Editors
             label = new GUIContent("WaitTime", "Waiting time to go to next point");
 
             character.waittime = EditorGUILayout.FloatField(label, character.waittime);
+
+            label = new GUIContent("Radius Sphere", "Create sphere with radius and set the closest way");
+            character.sphrmax = EditorGUILayout.FloatField(label, character.sphrmax);
 
             serializedObject.ApplyModifiedProperties();
 
