@@ -168,7 +168,10 @@ namespace CandiceAIforGames.AI
 
         private int destPoint = 0;
 
-        private float SphereMax = 3;
+        [SerializeField]
+        public float SphereMax = 3;
+        [SerializeField]
+        public bool HideSphere;
 
         [SerializeField]
         public float WaitingTime = 1f;
@@ -290,6 +293,7 @@ namespace CandiceAIforGames.AI
         public bool IsFollowingPath { get => isFollowingPath; set => isFollowingPath = value; }
         public float waittime { get => WaitingTime; set => WaitingTime = value; }
         public float sphrmax { get => SphereMax; set => SphereMax = value; }
+        public bool hidesphere { get => HideSphere; set => HideSphere = value; }
         public Vector3 LookPoint { get => lookPoint; set => lookPoint = value; }
         public bool DrawAgentPath { get => drawAgentPath; set => drawAgentPath = value; }
         public float RotationSpeed { get => rotationSpeed; set => rotationSpeed = value; }
@@ -874,10 +878,13 @@ namespace CandiceAIforGames.AI
 
         public void OnDrawGizmos()
         {
-            foreach (var point in PointsFor)
+            if (HideSphere == false)
             {
-                Gizmos.color = Color.blue;
-                Gizmos.DrawWireSphere(point.transform.position, SphereMax);
+                foreach (var point in PointsFor)
+                {
+                    Gizmos.color = Color.blue;
+                    Gizmos.DrawWireSphere(point.transform.position, SphereMax);
+                }
             }
              
 

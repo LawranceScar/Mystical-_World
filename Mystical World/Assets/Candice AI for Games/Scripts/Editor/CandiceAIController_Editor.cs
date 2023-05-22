@@ -391,6 +391,8 @@ namespace CandiceAIforGames.AI.Editors
 
             label = new GUIContent("Radius Sphere", "Create sphere with radius and set the closest way");
             character.sphrmax = EditorGUILayout.FloatField(label, character.sphrmax);
+            label = new GUIContent("Hide Sphere", "Show/Hide Sphere");
+            character.hidesphere = EditorGUILayout.Toggle(label, character.hidesphere);
 
             serializedObject.ApplyModifiedProperties();
 
@@ -405,7 +407,7 @@ namespace CandiceAIforGames.AI.Editors
             GUILayout.BeginVertical("box");
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            GUILayout.Label("Don't touch", EditorStyles.boldLabel);
+            GUILayout.Label("Rotating Pathfind", EditorStyles.boldLabel);
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
             label = new GUIContent("Turn Speed", "The speed the agent will turn between waypoints by when pathfinding.");
