@@ -362,7 +362,6 @@ namespace CandiceAIforGames.AI
             {
                 ray = new Ray(transform.position, player.transform.position - transform.position);
             }
-             AttackCheckAndKill();
             if (BehaviorTree != null)
                 BehaviorTree.Evaluate();
 
@@ -590,15 +589,12 @@ namespace CandiceAIforGames.AI
             }
             else if (!IsAttacking)
             {
-                Debug.Log("Real ATTACK"); //RealTime
-                IsAttacking = true;
-                if (is3D)
-
-                    StartCoroutine(combatModule.DealTimedDamage(AttackSpeed, AttackDamage, AttackRange, DamageAngle, enemyTags));
-                else
-                    StartCoroutine(combatModule.DealTimedDamage2D(AttackSpeed, AttackDamage, AttackRange, DamageAngle, enemyTags)); //Receive 
-                
-
+                //  Debug.Log("Real ATTACK"); //RealTime
+                attacksPerSecond -= Time.deltaTime;
+                if (attacksPerSecond <= 0)
+                {
+                    IsAttacking = true;
+                }
             }
             else
             {
@@ -615,9 +611,13 @@ namespace CandiceAIforGames.AI
             }
             else if (!IsAttacking)
             {
-                IsAttacking = true;
-                StartCoroutine(combatModule.FireProjectile(AttackTarget,Projectile,ProjectileSpawnPos,AttackSpeed));
+               // StartCoroutine(combatModule.FireProjectile(AttackTarget,Projectile,ProjectileSpawnPos,AttackSpeed));
             }
+        }
+
+        private void FixedUpdate()
+        {
+            AttackCheckAndKill();
         }
 
         private void AttackCheckAndKill()
@@ -626,13 +626,12 @@ namespace CandiceAIforGames.AI
             {
                 if (IsAttacking == true)
                 {
-                    Debug.Log(attacksPerSecond);
-                    Debug.Log(DefaultAttackPerSecond);
-                    attacksPerSecond -= Time.deltaTime;
+                   // Debug.Log(attacksPerSecond);
+                   // Debug.Log(DefaultAttackPerSecond);
                     if (attacksPerSecond <= 0)
                     {
                         NormalReceiveDamage(mainTarget.gameObject);
-                        agent.isStopped = true;
+                       // agent.isStopped = true;
                         attacksPerSecond = DefaultAttackPerSecond;
                         IsAttacking = false;
                     }

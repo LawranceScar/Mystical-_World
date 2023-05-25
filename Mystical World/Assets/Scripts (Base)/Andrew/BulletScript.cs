@@ -1,18 +1,33 @@
+using Assets.Scripts;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BulletScript : MonoBehaviour
 {
-    
-    public float Damage;
-   
-    public void takedamage(float damage)
+    private float CurrentDamageAmount; // Не чіпати
+
+    public void SetCurrentDamage(float damage) // Заміна значення CurrentDamageAmount
     {
-        Damage = damage;
+        CurrentDamageAmount = damage;
     }
-    public void damage(float hp)
+
+   
+
+    public void NormalReceiveDamage(GameObject DamagableObject)
     {
-        hp -= Damage;
+        IDamagable IDamagableObject = DamagableObject.GetComponent<IDamagable>();
+        if (IDamagableObject != null)
+        {
+            IDamagableObject.TakerDamage(CurrentDamageAmount); //ReceiveRealDamage
+        }
+    }
+
+
+    private void OnCollisionEnter(Collision other)
+    {
+       // Debug.Log(CurrentDamageAmount); === Перевірка кількості дамагу 
+        
+        NormalReceiveDamage(other.gameObject);
     }
 }

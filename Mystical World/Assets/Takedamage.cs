@@ -25,7 +25,7 @@ public class Takedamage : MonoBehaviour
         if (collision.gameObject.CompareTag("Bullet"))
         {
             BulletScript Myb = collision.gameObject.GetComponent<BulletScript>();
-            hp = hp - Myb.Damage;
+          //  hp = hp - Myb.Damage;
 
         }
     }

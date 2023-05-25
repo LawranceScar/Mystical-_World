@@ -31,12 +31,13 @@ public class Abud_Pistol : MonoBehaviour
                 DropPistol(TopPistol.transform);
             }
             TopPistol = hit.transform.gameObject;
-            ShootRef = TopPistol.GetComponent<Shoot>();
             GetPistol(hit.transform);
 
         }
-        if(Input.GetAxis("Fire1") == 1)
+        ShootRef = TopPistol.GetComponent<Shoot>();
+        if (Input.GetAxis("Fire1") == 1)
         {
+            Debug.Log("Niga");
             Debug.Log(ShootRef);
             if (ShootRef != null)
                 {

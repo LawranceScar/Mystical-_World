@@ -36,10 +36,10 @@ namespace CandiceAIforGames.AI
                 {
                     float distance = Vector3.Distance(transform.position, hit.transform.position);
                     float angle = Vector3.Angle(hit.transform.position - transform.position, transform.forward);
-                    if (angle <= damageAngle / 2 && distance <= attackRange)//If the object is within the attack range and within the damage angle.
+                  /*  if (angle <= damageAngle / 2 && distance <= attackRange)//If the object is within the attack range and within the damage angle.
                     {
-                        hit.transform.gameObject.SendMessage("CandiceReceiveDamage", damage);//send the damage to the hit object. The hit object needs to have a script with the method CandiceReceiveDamage(float damage);
-                    }
+                       // hit.transform.gameObject.SendMessage("CandiceReceiveDamage", damage);//send the damage to the hit object. The hit object needs to have a script with the method CandiceReceiveDamage(float damage);
+                    } */
                 }
             }
             attackCompleteCallback(true);//Callback to the AI Controller when the attack is complete. Usually to reset isAttacking variable to false;
