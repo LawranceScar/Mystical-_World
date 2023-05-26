@@ -177,6 +177,7 @@ namespace CandiceAIforGames.AI
         public float WaitingTime = 1f;
         private float SaveWaiting;
         public bool IsWalking;
+        private bool IsKnowWhereUnit;
 
 
         /*
@@ -376,23 +377,29 @@ namespace CandiceAIforGames.AI
 
         public void GotoIf()
         {
-            if (IsWalking == false)
+            if (IsKnowWhereUnit == false)
             {
-                if (!agent.pathPending && agent.remainingDistance < SphereMax) // GotoPointAgentUpdate
-                {
-                    WaitingTime -= Time.deltaTime;
-                    if (WaitingTime <= 0)
+                    if (!agent.pathPending && agent.remainingDistance < SphereMax) // GotoPointAgentUpdate
                     {
-                        agent.isStopped = false;
-                        GotoNextPoint();
-                        WaitingTime = SaveWaiting;
+                        WaitingTime -= Time.deltaTime;
+                        if (WaitingTime <= 0)
+                        {
+                            agent.isStopped = false;
+                            Debug.Log("agentStop");
+                            GotoNextPoint();
+                            WaitingTime = SaveWaiting;
+                        }
+                        else
+                        {
+                            agent.isStopped = true;
+                        }
                     }
-                    else
-                    {
-                        agent.isStopped = true;
-                    }
-                }
             }
+            else
+            {
+                WaitingTime = SaveWaiting;
+            }
+           // Debug.Log(agent.isStopped);
         }
 
 
@@ -791,7 +798,7 @@ namespace CandiceAIforGames.AI
             }
             if (distance <= AttackRange)
             {
-                LookPoint = AttackTarget.transform.position;
+               // LookPoint = AttackTarget.transform.position;
                 return true;
             }
             else
@@ -822,13 +829,15 @@ namespace CandiceAIforGames.AI
                         {
                             if (hitresult.collider.gameObject == player.gameObject)
                             {
+                                IsKnowWhereUnit = true;
                                 EnemyDetected = true;
                                 Enemies.AddRange(results.objects[key]);
                                 MainTarget = Enemies[0];
                                 MovePoint = MainTarget.transform.position;
                                 LookPoint = MainTarget.transform.position;
-                                agent.SetDestination(MovePoint);
                                 AttackTarget = Enemies[0];
+                                agent.SetDestination(MovePoint);
+                                agent.isStopped = false;
                             }
                         }
                         Debug.DrawLine(ray.origin, hitresult.point, Color.red);
@@ -846,7 +855,14 @@ namespace CandiceAIforGames.AI
 
                     }
                 }
+                if (EnemyDetected == false)
+                {
+                    IsKnowWhereUnit = false;
+                    MainTarget = null;
+                    AttackTarget = null;
+                }
             }
+            Debug.Log(IsKnowWhereUnit);
         }
         void onAttackComplete(bool success)
         {
