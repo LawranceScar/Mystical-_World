@@ -18,24 +18,47 @@ public class Abud : MonoBehaviour
 
     void Update()
     {
+        CheckSwordGive();
+    }
+
+
+    private void CheckSwordGive()
+    {
         RaycastHit hit;
-       
-        if (Physics.Raycast(Camera.transform.position, Camera.transform.forward, out hit, range) && Input.GetKey(KeyCode.E) && hit.transform.tag == "Sword")
+        if (Physics.Raycast(Camera.transform.position, Camera.transform.forward, out hit, range) && Input.GetKeyDown(KeyCode.E) && IsSword == false && hit.transform.tag == "Sword")
         {
-            GiveSword(hit.transform);
             TopSword = hit.transform.gameObject;
-            
-        }
-        if ( Physics.Raycast(Camera.transform.position, Camera.transform.forward, out hit, range) && Input.GetKey(KeyCode.E) && hit.transform.tag == "Sword")
-        {
+            Debug.Log("Nigga1");
+            GiveSword(hit.transform);
+            IsSword = true;
 
+        }
+        if (IsSword == true && Physics.Raycast(Camera.transform.position, Camera.transform.forward, out hit, range) && Input.GetKeyDown(KeyCode.E) && hit.transform.tag == "Sword")
+        {
+            Debug.Log("Nigga");
             Drop(TopSword.transform);
-            GiveSword(hit.transform);
-            SSword = hit.transform.gameObject;
             TopSword = hit.transform.gameObject;
+            GiveSword(hit.transform);
 
         }
+
         Debug.Log(hit.transform.name);
+        Debug.Log(TopSword.transform.name);
+
+
+        /*  if (Physics.Raycast(Camera.transform.position, Camera.transform.forward, out hit, range) && Input.GetKey(KeyCode.E) && hit.transform.tag == "Sword")
+          {
+              if (IsSword)
+              {
+                  Drop(TopSword.transform);
+              }
+              else
+              {
+                  GiveSword(hit.transform);
+                  TopSword = hit.transform.gameObject;
+                  IsSword = true;
+              }
+          } */
     }
     public void GiveSword(Transform newSword)
     {

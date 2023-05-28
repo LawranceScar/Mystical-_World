@@ -63,11 +63,14 @@ namespace CandiceAIforGames.AI
         [SerializeField]
         FloatingEnemyHealthBar healthbar;
         [SerializeField]
+        Canvas healthbarCanvas;
+        [SerializeField]
         private float halfHeight = 100f;
         [SerializeField]
         private bool is3D = true;
 
         Ray ray;
+        Ray raycasdt;
 
 
         /*
@@ -97,6 +100,8 @@ namespace CandiceAIforGames.AI
         private List<GameObject> players = new List<GameObject>();
         [SerializeField]
         private GameObject player;
+        [SerializeField]
+        public GameObject PlayerCast;
         [SerializeField]
         private GameObject mainTarget;
         [SerializeField]
@@ -318,6 +323,7 @@ namespace CandiceAIforGames.AI
         void Start()
         {
             healthbar = GetComponentInChildren<FloatingEnemyHealthBar>();
+            healthbarCanvas = GetComponentInChildren<Canvas>();
 
             agent = GetComponent<NavMeshAgent>();
 
@@ -351,6 +357,11 @@ namespace CandiceAIforGames.AI
         {
             HitPoints = HitPoints - damage;
             healthbar.UpdateBar(HitPoints, MaxHitPoints);
+        }
+
+        private void IsWallHideBar(Canvas floatingEnemyHealthBar, bool IsEnabled)
+        {
+            floatingEnemyHealthBar.enabled = IsEnabled;
         }
 
 
@@ -832,6 +843,7 @@ namespace CandiceAIforGames.AI
                                 IsKnowWhereUnit = true;
                                 EnemyDetected = true;
                                 Enemies.AddRange(results.objects[key]);
+                                IsWallHideBar(healthbarCanvas, true);
                                 MainTarget = Enemies[0];
                                 MovePoint = MainTarget.transform.position;
                                 LookPoint = MainTarget.transform.position;
@@ -857,6 +869,7 @@ namespace CandiceAIforGames.AI
                 }
                 if (EnemyDetected == false)
                 {
+                    IsWallHideBar(healthbarCanvas, false);
                     IsKnowWhereUnit = false;
                     MainTarget = null;
                     AttackTarget = null;

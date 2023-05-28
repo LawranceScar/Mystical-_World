@@ -10,6 +10,8 @@ public class CamMove : MonoBehaviour
 
     private Vector3 Offset = new Vector3(0.0f, 1.0f, 0.0f);
 
+    public float SenseMouse = 10.0f;
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -21,7 +23,7 @@ public class CamMove : MonoBehaviour
     {
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
-        transform.localEulerAngles = new Vector3(transform.localEulerAngles.x + mouseY * 10, transform.localEulerAngles.y - mouseX * 10, 0.0f); // процес обертання
+        transform.localEulerAngles = new Vector3(transform.localEulerAngles.x + -mouseY * SenseMouse, transform.localEulerAngles.y - -mouseX * SenseMouse, 0.0f); // процес обертання
         transform.position = Target.position - transform.forward * Distance  + transform.right + Offset;
     }
 }

@@ -139,14 +139,7 @@ public class AllLiferSystems : MonoBehaviour, IDamagable, IHealable
 
     private void HealthFunc()
     {
-        if (Health <= 0)
-        {
-            IsDead = true;
-        }
-        else
-        {
-            IsDead = false;
-        }
+        Die();
 
         if (Health > HealthPlayer)
         {
@@ -177,6 +170,18 @@ public class AllLiferSystems : MonoBehaviour, IDamagable, IHealable
                 Health = Health + HealthHeal;
             }
         } */
+    }
+
+    private void Die()
+    {
+        if (Health <= 0)
+        {
+            IsDead = true;
+        }
+        else
+        {
+            IsDead = false;
+        }
     }
 
     private void ManaSystem()

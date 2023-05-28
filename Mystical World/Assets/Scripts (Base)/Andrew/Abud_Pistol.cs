@@ -37,8 +37,7 @@ public class Abud_Pistol : MonoBehaviour
         ShootRef = TopPistol.GetComponent<Shoot>();
         if (Input.GetAxis("Fire1") == 1)
         {
-            Debug.Log("Niga");
-            Debug.Log(ShootRef);
+           // Debug.Log(ShootRef);
             if (ShootRef != null)
                 {
                     ShootRef.ShootBullet();

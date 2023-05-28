@@ -9,8 +9,10 @@ public class Sworddamage : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        DamagableGameObject(other.gameObject);
-        Debug.Log("Gitler");
+        if (!other.gameObject.CompareTag("Player"))
+        {
+            DamagableGameObject(other.gameObject);
+        }
     }
 
     private void DamagableGameObject(GameObject DamagableObject)
