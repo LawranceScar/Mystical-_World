@@ -43,7 +43,7 @@ namespace CandiceAIforGames.AI
             }
             else if (capsule != null)
             {
-                transform.LookAt(new Vector3(aiController.MainTarget.transform.position.x, aiController.MainTarget.transform.position.y + capsule.height, aiController.MainTarget.transform.position.z));
+                transform.LookAt(new Vector3(aiController.MainTarget.transform.position.x, transform.position.y, aiController.MainTarget.transform.position.z)); //Змінити кут (дивитися на голову або центр)
             }
         }
         public void LookAway(Transform transform, CandiceAIController aiController)

@@ -222,7 +222,7 @@ namespace CandiceAIforGames.AI
         [SerializeField]
         public float attackDamage = 3f;
         [SerializeField]
-        private float attacksPerSecond = 1f;
+        private float attacksPerSecond;
         [SerializeField]
         private float attackRange = 1f;
         [SerializeField]
@@ -237,8 +237,10 @@ namespace CandiceAIforGames.AI
         private bool hasAttackAnimation = false;
         [SerializeField]
         public bool isAttacking = false;
+        [SerializeField]
+        public bool isKnowAttacking = false;
 
-        private float DefaultAttackPerSecond = 1f;
+        private float DefaultAttackPerSecond;
 
         /*
          * Modules
@@ -382,8 +384,6 @@ namespace CandiceAIforGames.AI
 
             GotoIf();
 
-
-
         }
 
         public void GotoIf()
@@ -495,7 +495,7 @@ namespace CandiceAIforGames.AI
             {
                 HalfHeight = gameObject.transform.localScale.x * 2;
             }
-            detectionModule.AvoidObstacles(MainTarget.transform, MovePoint, transform,HalfHeight + obstacleAvoidanceAOE,RotationSpeed,true,ObstacleAvoidaceDistance,DetectionLines,PerceptionMask);
+           // detectionModule.AvoidObstacles(MainTarget.transform, MovePoint, transform,HalfHeight + obstacleAvoidanceAOE,RotationSpeed,true,ObstacleAvoidaceDistance,DetectionLines,PerceptionMask);
         }
         /// <summary>
         /// Do some checks on whether a new path must be requested or not.
@@ -600,24 +600,19 @@ namespace CandiceAIforGames.AI
 
         public void AttackMelee()
         {
-            if (hasAttackAnimation && !IsAttacking) //REAL ATACK
-            {
-                //Play attack animation which will call the DealDamage() function in the combat module
-                IsAttacking = true;
-            }
-            else if (!IsAttacking)
-            {
-                //  Debug.Log("Real ATTACK"); //RealTime
+                Debug.Log("attackDebil");
                 attacksPerSecond -= Time.deltaTime;
+                isKnowAttacking = true;
                 if (attacksPerSecond <= 0)
                 {
+                    AttackCheckAndKill();
                     IsAttacking = true;
+                    attacksPerSecond = DefaultAttackPerSecond;
                 }
-            }
-            else
-            {
-                IsAttacking = false;
-            }
+                else
+                {
+                    IsAttacking = false;
+                }
         }
 
         public void AttackRanged()
@@ -633,37 +628,12 @@ namespace CandiceAIforGames.AI
             }
         }
 
-        private void FixedUpdate()
-        {
-            AttackCheckAndKill();
-        }
-
         private void AttackCheckAndKill()
         {
-            if (AllLiferSystems.IsDead == false)
-            {
-                if (IsAttacking == true)
-                {
-                   // Debug.Log(attacksPerSecond);
-                   // Debug.Log(DefaultAttackPerSecond);
-                    if (attacksPerSecond <= 0)
-                    {
-                        NormalReceiveDamage(mainTarget.gameObject);
-                       // agent.isStopped = true;
-                        attacksPerSecond = DefaultAttackPerSecond;
-                        IsAttacking = false;
-                    }
-                }
-                else
-                {
-                    IsAttacking = false;
-                }
-            }
-            else
-            {
-                IsAttacking = false;
-                agent.isStopped = false;
-            }
+          Debug.Log("Negr");
+          NormalReceiveDamage(mainTarget.gameObject);
+          Debug.Log("Attack: " + IsAttacking);
+          Debug.Log("IsKnow: " + isKnowAttacking);
         }
 
         private void OnCollisionStay(Collision collision)
@@ -707,10 +677,6 @@ namespace CandiceAIforGames.AI
                 movePoint = mainTarget.transform.position;
                 movePoint.y = 1;
                 switchWanderTarget = false;
-            }
-            else
-            {
-
             }
 
             // don't need to change direction every frame seeing as you walk in a straight line only
@@ -809,10 +775,12 @@ namespace CandiceAIforGames.AI
             }
             if (distance <= AttackRange)
             {
-               // LookPoint = AttackTarget.transform.position;
+                // LookPoint = AttackTarget.transform.position;
+
                 return true;
             }
             else
+                isKnowAttacking = false;
                 return false;
         }
 
@@ -845,11 +813,21 @@ namespace CandiceAIforGames.AI
                                 Enemies.AddRange(results.objects[key]);
                                 IsWallHideBar(healthbarCanvas, true);
                                 MainTarget = Enemies[0];
-                                MovePoint = MainTarget.transform.position;
+                                if (isKnowAttacking == true)
+                                {
+                                    //  MovePoint = null;
+                                    MovePoint = this.transform.position;
+                                    agent.isStopped = true;
+
+                                }
+                                else
+                                {
+                                    MovePoint = MainTarget.transform.position;
+                                    agent.isStopped = false;
+                                    agent.SetDestination(MovePoint);
+                                }
                                 LookPoint = MainTarget.transform.position;
                                 AttackTarget = Enemies[0];
-                                agent.SetDestination(MovePoint);
-                                agent.isStopped = false;
                             }
                         }
                         Debug.DrawLine(ray.origin, hitresult.point, Color.red);
@@ -867,19 +845,28 @@ namespace CandiceAIforGames.AI
 
                     }
                 }
-                if (EnemyDetected == false)
-                {
-                    IsWallHideBar(healthbarCanvas, false);
-                    IsKnowWhereUnit = false;
-                    MainTarget = null;
-                    AttackTarget = null;
-                }
             }
-            Debug.Log(IsKnowWhereUnit);
+            else
+            {
+                AllyDetected = false;
+                EnemyDetected = false;
+                PlayerDetected = false;
+                Enemies.Clear();
+                Allies.Clear();
+                Players.Clear();
+            }
+            if (EnemyDetected == false)
+            {
+                IsWallHideBar(healthbarCanvas, false);
+                IsKnowWhereUnit = false;
+                MainTarget = null;
+                AttackTarget = null;
+            }
         }
         void onAttackComplete(bool success)
         {
             IsAttacking = false;
+            isKnowAttacking = false;
         }
 
         public void WaypointPatrol()

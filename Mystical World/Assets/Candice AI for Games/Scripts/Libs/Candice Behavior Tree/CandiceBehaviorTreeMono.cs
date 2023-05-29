@@ -126,7 +126,7 @@ namespace CandiceAIforGames.AI
             rotateToNode = new CandiceBehaviorAction(CandiceDefaultBehaviors.RotateTo, rootNode);
             attackNode = new CandiceBehaviorAction(CandiceDefaultBehaviors.AttackMelee, rootNode);
             rangeAttackNode = new CandiceBehaviorAction(CandiceDefaultBehaviors.AttackRange, rootNode);
-            moveNode = new CandiceBehaviorAction(CandiceDefaultBehaviors.MoveForwardWithSlopeAlignment, rootNode);
+            moveNode = new CandiceBehaviorAction(CandiceDefaultBehaviors.MoveForward, rootNode); // Змінювати на Slope, якщо треба
             withinAttackRange = new CandiceBehaviorAction(CandiceDefaultBehaviors.WithinAttackRange, rootNode);
 
 

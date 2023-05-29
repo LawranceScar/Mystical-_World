@@ -272,7 +272,7 @@ namespace CandiceAIforGames.AI
         public static CandiceBehaviorStates AttackMelee(CandiceBehaviorNode rootNode)
         {
             CandiceAIController agent = rootNode.aiController;
-            agent.AttackMelee();
+                agent.AttackMelee();
             return CandiceBehaviorStates.SUCCESS;
         }
         public static CandiceBehaviorStates AttackRange(CandiceBehaviorNode rootNode)
