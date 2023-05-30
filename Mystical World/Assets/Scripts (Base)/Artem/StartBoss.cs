@@ -9,6 +9,8 @@ public class StartBoss : MonoBehaviour
     private float BossSpeed = 5000;
     public bool CanMove = false;
     private bool CanAttack = false;
+    public bool DidAttack = false;
+    public bool NeedBack = false;
     void Start()
     {
         RBOfBoss = GetComponent<Rigidbody>();
@@ -23,7 +25,12 @@ public class StartBoss : MonoBehaviour
         }
         if (CanAttack)
         {
-
+            DidAttack = true;
+        }
+        if (NeedBack && DidAttack)
+        {
+            this.transform.forward = -this.transform.forward;
+            RBOfBoss.AddForce(this.transform.forward.normalized * BossSpeed * 2, ForceMode.Force);
         }
 
     }

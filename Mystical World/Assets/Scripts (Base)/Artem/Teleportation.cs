@@ -8,32 +8,49 @@ public class Teleportation : MonoBehaviour
 
     static private List<bool> IsActiv = new List<bool>();
 
-    static private int Index = 0;
+    static private int I;
+    private int LastI;
 
     [SerializeField] private Transform Player;
 
     void Start()
     {
-        Index = 0;
         IsActiv.Add(false);
+        LastI = -1;
+        
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.T))
+        if (Input.GetKeyDown(KeyCode.T) && LastI > -1)
         {
-            if (IsActiv[Index])
+            I = LastI + 1;
+            if(I > Teleports.Count - 1)
             {
-                Player.position = Teleports[Index].position;
+                I = 0;
             }
-            if (Index < Teleports.Count - 1)
+
+            while(true)
             {
-                Index++;
+                Debug.Log("Index =" + I);
+                Debug.Log("LastIndex =" + LastI);
+
+                if (IsActiv[I])
+                {
+                    Player.position = Teleports[I].position;
+                    LastI = I;
+                    break; 
+                }
+                else 
+                {
+                    I++;
+                    if (I >= Teleports.Count)
+                    {
+                        I = 0;
+                    }
+                }
             }
-            else
-            {
-                Index = 0;
-            }
+            
         }
 
         
@@ -43,22 +60,16 @@ public class Teleportation : MonoBehaviour
     {
         if(other.gameObject.CompareTag("Player"))
         {
-            for (int i = 0; i < Teleports.Count - 1; i++)
+            Debug.Log("Hello Player");
+            for (int i = 0; i < Teleports.Count; i++)
             {
                 if(this.transform == Teleports[i])
                 {
                     IsActiv[i] = true;
+                    LastI = i;
+                    Debug.Log("LastIndex" + LastI);
                 }
             }
         }
-    }
-     private void ChangePosition()
-     {
-
-     }
-
-    private void NextIndex()
-    {
-
     }
 }
