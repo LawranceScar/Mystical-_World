@@ -32,9 +32,9 @@ public class Abud_Pistol : MonoBehaviour
             }
             TopPistol = hit.transform.gameObject;
             GetPistol(hit.transform);
-
+            ShootRef = TopPistol.GetComponent<Shoot>();
+            IsPistol = true;
         }
-        ShootRef = TopPistol.GetComponent<Shoot>();
         if (Input.GetAxis("Fire1") == 1)
         {
             Debug.Log("Niga");
@@ -49,7 +49,7 @@ public class Abud_Pistol : MonoBehaviour
     {
         pistol.SetParent(hand);
         pistol.localPosition = Vector3.zero;
-        pistol.localRotation = Quaternion.Euler(0, 0, 0);
+        pistol.localRotation = Quaternion.Euler(-90, 0, 0);
     }
     public void DropPistol(Transform pistol)
     {
