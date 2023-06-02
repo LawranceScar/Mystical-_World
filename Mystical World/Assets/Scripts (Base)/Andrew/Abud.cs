@@ -7,7 +7,7 @@ public class Abud : MonoBehaviour
     public Transform Sword;
     float range = 20;
     public Camera Camera;
-    public bool IsSword;
+    public bool IsSword = false;
     public GameObject TopSword;
     public GameObject SSword;
     public Rigidbody rb;
@@ -20,22 +20,21 @@ public class Abud : MonoBehaviour
     {
         RaycastHit hit;
        
-        if (Physics.Raycast(Camera.transform.position, Camera.transform.forward, out hit, range) && Input.GetKey(KeyCode.E) && hit.transform.tag == "Sword")
+        if (Physics.Raycast(Camera.transform.position, Camera.transform.forward, out hit, range) && Input.GetKey(KeyCode.E) && hit.transform.tag == "Sword" && IsSword == false)
         {
-            GiveSword(hit.transform);
             TopSword = hit.transform.gameObject;
-            
+            GiveSword(hit.transform);
+            IsSword = true;
+            Debug.Log(TopSword.name);
         }
-        if ( Physics.Raycast(Camera.transform.position, Camera.transform.forward, out hit, range) && Input.GetKey(KeyCode.E) && hit.transform.tag == "Sword")
+        if (Physics.Raycast(Camera.transform.position, Camera.transform.forward, out hit, range) && Input.GetKey(KeyCode.E) && hit.transform.tag == "Sword" && IsSword == true)
         {
-
             Drop(TopSword.transform);
-            GiveSword(hit.transform);
-            SSword = hit.transform.gameObject;
+            TopSword = null;
             TopSword = hit.transform.gameObject;
-
+            GiveSword(hit.transform);
+            Debug.Log(TopSword.name);
         }
-        Debug.Log(hit.transform.name);
     }
     public void GiveSword(Transform newSword)
     {
@@ -46,6 +45,7 @@ public class Abud : MonoBehaviour
     }
     public void Drop(Transform newSword)
     {
+        Debug.Log("ppss");
         newSword.SetParent(null);
     }
 }

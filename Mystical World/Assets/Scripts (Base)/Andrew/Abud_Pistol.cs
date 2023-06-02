@@ -39,10 +39,13 @@ public class Abud_Pistol : MonoBehaviour
         {
             Debug.Log("Niga");
             Debug.Log(ShootRef);
+        if(ChangeSlots.WeaponS == true)
+            {
             if (ShootRef != null)
                 {
                     ShootRef.ShootBullet();
                 }
+            }
         }
     }
     public void GetPistol(Transform pistol)
