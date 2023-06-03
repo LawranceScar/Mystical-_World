@@ -8,6 +8,7 @@ TagManager:
   - Pistol
   - Bullet
   - Sword
+  - E
   layers:
   - Default
   - TransparentFX
