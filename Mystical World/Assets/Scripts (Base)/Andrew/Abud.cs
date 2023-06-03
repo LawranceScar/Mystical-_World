@@ -28,14 +28,12 @@ public class Abud : MonoBehaviour
         if (Physics.Raycast(Camera.transform.position, Camera.transform.forward, out hit, range) && Input.GetKeyDown(KeyCode.E) && IsSword == false && hit.transform.tag == "Sword")
         {
             TopSword = hit.transform.gameObject;
-            Debug.Log("Nigga1");
             GiveSword(hit.transform);
             IsSword = true;
 
         }
         if (IsSword == true && Physics.Raycast(Camera.transform.position, Camera.transform.forward, out hit, range) && Input.GetKeyDown(KeyCode.E) && hit.transform.tag == "Sword")
         {
-            Debug.Log("Nigga");
             Drop(TopSword.transform);
             TopSword = hit.transform.gameObject;
             GiveSword(hit.transform);

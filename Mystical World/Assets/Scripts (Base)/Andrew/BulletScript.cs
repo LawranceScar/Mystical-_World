@@ -26,8 +26,10 @@ public class BulletScript : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-       // Debug.Log(CurrentDamageAmount); === Перевірка кількості дамагу 
-        
-        NormalReceiveDamage(other.gameObject);
+        // Debug.Log(CurrentDamageAmount); === Перевірка кількості дамагу 
+        if (!other.gameObject.CompareTag("Player"))
+        {
+            NormalReceiveDamage(other.gameObject);
+        }
     }
 }
