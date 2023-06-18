@@ -13,7 +13,7 @@ public class AbudLaser : MonoBehaviour
     public static bool workLaser;
     void Start()
     {
-        myshootlaser = GetComponent<ShootLaser>();
+        
     }
 
     void Update()
@@ -21,16 +21,23 @@ public class AbudLaser : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(Camera.transform.position, Camera.transform.forward, out hit, range) && Input.GetKey(KeyCode.E) && hit.transform.tag == "Laser" && IsLaser == false)
         {
-            GetPistol(hit.transform);
             TopLaser = hit.transform.gameObject;
+            GetPistol(hit.transform);
             IsLaser = true;
         }
         if (Physics.Raycast(Camera.transform.position, Camera.transform.forward, out hit, range) && Input.GetKey(KeyCode.E) && hit.transform.tag == "Laser" && IsLaser == true)
         {
             DropPistol(TopLaser.transform);
-            GetPistol(hit.transform);
             TopLaser = hit.transform.gameObject;
+            GetPistol(hit.transform);
         }
+           myshootlaser = TopLaser.GetComponent<ShootLaser>();
+            if(myshootlaser != null)
+            {
+
+                myshootlaser.ShootLazer();
+            }
+           
         if (Input.GetKeyDown(KeyCode.K) && workLaser == false)
         {
             ShootLaser.mylinerenderer.enabled = true;
@@ -41,6 +48,7 @@ public class AbudLaser : MonoBehaviour
             ShootLaser.mylinerenderer.enabled = false;
             workLaser = false;
         }
+       
     }
     public void GetPistol(Transform pistol)
     {
