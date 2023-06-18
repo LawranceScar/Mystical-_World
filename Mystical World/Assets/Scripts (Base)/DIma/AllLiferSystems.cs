@@ -54,7 +54,10 @@ public class AllLiferSystems : MonoBehaviour, IDamagable, IHealable
     {
         if (IsDead == false)
         {
+            if (Health <= HealthPlayer)
+            {
                 Health = Health + heal;
+            }
         }
     }
 
