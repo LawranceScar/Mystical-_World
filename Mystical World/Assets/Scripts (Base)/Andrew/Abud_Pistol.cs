@@ -32,7 +32,7 @@ public class Abud_Pistol : MonoBehaviour
             }
             TopPistol = hit.transform.gameObject;
             GetPistol(hit.transform);
-
+            IsPistol = true;
         }
         ShootRef = TopPistol.GetComponent<Shoot>();
         if (Input.GetAxis("Fire1") == 1)
@@ -48,7 +48,7 @@ public class Abud_Pistol : MonoBehaviour
     {
         pistol.SetParent(hand);
         pistol.localPosition = Vector3.zero;
-        pistol.localRotation = Quaternion.Euler(0, 0, 0);
+        pistol.localRotation = Quaternion.Euler(-90, 0, 0);
     }
     public void DropPistol(Transform pistol)
     {
