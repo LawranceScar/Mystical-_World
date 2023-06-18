@@ -27,7 +27,7 @@ public class ShootLaser : MonoBehaviour
             if(Physics.Raycast(Lazer.transform.position, Lazer.transform.forward, out hit, range))
             {
                 Debug.Log(hit.transform.name);
-                HpSystem enemyhp = hit.transform.GetComponent<HpSystem>();
+                
                 if(hit.transform.gameObject != null)
                     {
                         Line[1] = hit.point;
@@ -38,9 +38,9 @@ public class ShootLaser : MonoBehaviour
                     }
                 if(AbudLaser.workLaser == true)
                 {
-                    if(enemyhp != null)
+                    if(hit.transform.gameObject != null)
                     {
-                        enemyhp.HP(damage);   
+                    Debug.Log("minus Hp");
                     }
                 }
             }
