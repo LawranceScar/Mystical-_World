@@ -6,7 +6,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using Assets.Scripts;
 
 namespace CandiceAIforGames.AI
 {
@@ -45,7 +44,7 @@ namespace CandiceAIforGames.AI
     #endregion
     //New inheritance chain from CandiceAnimationManager, which in turns inherits from MonoBehaviour. 
     //Scene Manager will override all aspects on future releases
-    public class CandiceAIController : CandiceAnimationManager, IDamagable
+    public class CandiceAIController : CandiceAnimationManager, IDamagable, ISafeZonenable
     {
 
         #region Member Variables
@@ -239,6 +238,8 @@ namespace CandiceAIforGames.AI
         public bool isAttacking = false;
         [SerializeField]
         public bool isKnowAttacking = false;
+        [SerializeField]
+        public bool IsSafeZoneTrue;
 
         private float DefaultAttackPerSecond;
 
@@ -357,8 +358,16 @@ namespace CandiceAIforGames.AI
 
         public void TakerDamage(float damage)
         {
-            HitPoints = HitPoints - damage;
-            healthbar.UpdateBar(HitPoints, MaxHitPoints);
+            if (!IsSafeZoneTrue)
+            {
+                HitPoints = HitPoints - damage;
+                healthbar.UpdateBar(HitPoints, MaxHitPoints);
+            }
+        }
+
+        public void IsSafeZone(bool value)
+        {
+            IsSafeZoneTrue = value;
         }
 
         private void IsWallHideBar(Canvas floatingEnemyHealthBar, bool IsEnabled)
@@ -630,7 +639,7 @@ namespace CandiceAIforGames.AI
 
         private void AttackCheckAndKill()
         {
-          Debug.Log("Negr");
+         // Debug.Log("Negr");
           NormalReceiveDamage(mainTarget.gameObject);
           Debug.Log("Attack: " + IsAttacking);
           Debug.Log("IsKnow: " + isKnowAttacking);
@@ -789,72 +798,70 @@ namespace CandiceAIforGames.AI
             /*This is where you put your detection logic. 
              * The code below is only a sample to get you started.
              */
-            AllyDetected = false;
-            EnemyDetected = false;
-            PlayerDetected = false;
-            Enemies.Clear();
-            Allies.Clear();
-            Players.Clear();
-            if (AllLiferSystems.IsDead == false)
+            DisableDetect();
+            if (!IsSafeZoneTrue)
             {
-                foreach (string key in results.objects.Keys)
+                if (AllLiferSystems.IsDead == false)
                 {
-
-                    if (EnemyTags.Contains(key))
+                    foreach (string key in results.objects.Keys)
                     {
-                        RaycastHit hitresult;
-                        Physics.Raycast(ray, out hitresult);
-                        if (hitresult.collider != null)
+
+                        if (EnemyTags.Contains(key))
                         {
-                            if (hitresult.collider.gameObject == player.gameObject)
+                            RaycastHit hitresult;
+                            Physics.Raycast(ray, out hitresult);
+                            if (hitresult.collider != null)
                             {
-                                IsKnowWhereUnit = true;
-                                EnemyDetected = true;
-                                Enemies.AddRange(results.objects[key]);
-                                IsWallHideBar(healthbarCanvas, true);
-                                MainTarget = Enemies[0];
-                                if (isKnowAttacking == true)
+                                if (hitresult.collider.gameObject == player.gameObject)
                                 {
-                                    //  MovePoint = null;
-                                    MovePoint = this.transform.position;
-                                    agent.isStopped = true;
+                                    IsKnowWhereUnit = true;
+                                    EnemyDetected = true;
+                                    Enemies.AddRange(results.objects[key]);
+                                    IsWallHideBar(healthbarCanvas, true);
+                                    MainTarget = Enemies[0];
+                                    if (isKnowAttacking == true)
+                                    {
+                                        //  MovePoint = null;
+                                        MovePoint = this.transform.position;
+                                        agent.isStopped = true;
 
+                                    }
+                                    else
+                                    {
+                                        MovePoint = MainTarget.transform.position;
+                                        agent.isStopped = false;
+                                        agent.SetDestination(MovePoint);
+                                    }
+                                    LookPoint = MainTarget.transform.position;
+                                    AttackTarget = Enemies[0];
                                 }
-                                else
-                                {
-                                    MovePoint = MainTarget.transform.position;
-                                    agent.isStopped = false;
-                                    agent.SetDestination(MovePoint);
-                                }
-                                LookPoint = MainTarget.transform.position;
-                                AttackTarget = Enemies[0];
                             }
+                            Debug.DrawLine(ray.origin, hitresult.point, Color.red);
                         }
-                        Debug.DrawLine(ray.origin, hitresult.point, Color.red);
-                    }
-                    if (AllyTags.Contains(key))
-                    {
-                        AllyDetected = true;
-                        Allies.AddRange(results.objects[key]);
-                    }
-                    if (key == "Player")
-                    {
-                        PlayerDetected = true;
-                        Players.AddRange(results.objects[key]);
-                        Player = Players[0];
+                        if (AllyTags.Contains(key))
+                        {
+                            AllyDetected = true;
+                            Allies.AddRange(results.objects[key]);
+                        }
+                        if (key == "Player")
+                        {
+                            PlayerDetected = true;
+                            Players.AddRange(results.objects[key]);
+                            Player = Players[0];
 
+                        }
                     }
+                }
+                else
+                {
+                    DisableDetect();
                 }
             }
             else
             {
-                AllyDetected = false;
-                EnemyDetected = false;
-                PlayerDetected = false;
-                Enemies.Clear();
-                Allies.Clear();
-                Players.Clear();
+                DisableDetect();
             }
+
             if (EnemyDetected == false)
             {
                 IsWallHideBar(healthbarCanvas, false);
@@ -862,6 +869,21 @@ namespace CandiceAIforGames.AI
                 MainTarget = null;
                 AttackTarget = null;
             }
+        }
+
+        private void DisableDetect()
+        {
+            AllyDetected = false;
+            EnemyDetected = false;
+            PlayerDetected = false;
+            Enemies.Clear();
+            Allies.Clear();
+            Players.Clear();
+        }
+
+        private void CheckDetect()
+        {
+
         }
         void onAttackComplete(bool success)
         {

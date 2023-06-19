@@ -10,6 +10,7 @@ public class EnemySpawners : MonoBehaviour
 {
 
     public bool IsEnemySpawn = true;
+    public bool IsEnemyHaveTimerToDestroy = false;
     [HideInInspector] public bool IsOnTriggerStay = false;
     [HideInInspector] public bool IsOnTriggerEnter = false;
 
@@ -70,7 +71,10 @@ public class EnemySpawners : MonoBehaviour
         }
         else
         {
-            RenewFunc();
+            if (IsEnemyHaveTimerToDestroy)
+            {
+                RenewFunc();
+            }
         }
         Debug.Log(MaxAmountEnemies);
 

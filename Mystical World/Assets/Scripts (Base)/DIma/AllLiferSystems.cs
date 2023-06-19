@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AllLiferSystems : MonoBehaviour, IDamagable, IHealable
+public class AllLiferSystems : MonoBehaviour, IDamagable, IHealable, ISafeZonenable
 {
     [Header("Health Settings")]
     [SerializeField] protected float HealthPlayer = 100; // —к≥льки всього хп
@@ -43,12 +43,16 @@ public class AllLiferSystems : MonoBehaviour, IDamagable, IHealable
     // не ч≥пати
     private bool IsStartedStamina;
     private bool IsStartedMp;
+    private bool IsSafeZoneTrue;
 
     public static bool IsDead; // якщо смерть
 
     public void TakerDamage(float damage)
     {
-      Health = Health - damage;
+        if (!IsSafeZoneTrue)
+        {
+            Health = Health - damage;
+        }
     }
     public void Heal(float heal)
     {
@@ -59,6 +63,11 @@ public class AllLiferSystems : MonoBehaviour, IDamagable, IHealable
                 Health = Health + heal;
             }
         }
+    }
+
+    public void IsSafeZone(bool value)
+    {
+        IsSafeZoneTrue = value;
     }
 
     void Start()
@@ -78,6 +87,7 @@ public class AllLiferSystems : MonoBehaviour, IDamagable, IHealable
 
     void Update()
     {
+        Debug.Log("Bool " +IsSafeZoneTrue);
         // Debug.Log(DefaultStaminaAmount);
         StaminaCounter();
         HealthFunc();

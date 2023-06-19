@@ -8,7 +8,7 @@ public class TakerAllLiferSystems : AllLiferSystems
     public float GetHealthDefault()
     {
         //  DefaultHP = Health;
-        Debug.Log(Health);
+       // Debug.Log(Health);
         return HealthPlayer;
     }
 
