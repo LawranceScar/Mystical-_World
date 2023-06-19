@@ -266,12 +266,18 @@ namespace CandiceAIforGames.AI.Editors
 
             label = new GUIContent("Detection Radius", "The radius which the character can detect other objects.");
             character.DetectionRadius = EditorGUILayout.FloatField(label, character.DetectionRadius);
+            label = new GUIContent("Detection Radius When Damage", "Boom radius");
+            character.DetectionRadiusWhenDamage = EditorGUILayout.FloatField(label, character.DetectionRadiusWhenDamage);
             label = new GUIContent("Detection Lines", "The amount of raycast lines the agent will emit in order to detect obstacles, evenly distrubuted from the center.");
             character.DetectionLines = EditorGUILayout.IntField(label, character.DetectionLines);
             label = new GUIContent("Detection Height", "The height at which the agent can detect objects.");
             character.DetectionHeight = EditorGUILayout.FloatField(label, character.DetectionHeight);
             label = new GUIContent("Line of Sight", "The angle, in degrees, in front of the agent where the it will be able to see objects.");
             character.LineOfSight = EditorGUILayout.FloatField(label, character.LineOfSight);
+            label = new GUIContent("Line of Sight When Damage", "When Damage");
+            character.LineOfSightWhenDamage = EditorGUILayout.FloatField(label, character.LineOfSightWhenDamage);
+            label = new GUIContent("Time To stop see player", "Null");
+            character.timerToStopSeePlayer = EditorGUILayout.FloatField(label, character.timerToStopSeePlayer);
 
             label = new GUIContent("Detection Tags:", "All the Tags that the agent will detect.");
             showTags = EditorGUILayout.Foldout(showTags, label);

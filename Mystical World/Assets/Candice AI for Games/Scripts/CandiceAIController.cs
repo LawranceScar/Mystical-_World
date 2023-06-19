@@ -116,14 +116,26 @@ namespace CandiceAIforGames.AI
          */
         [SerializeField]
         private float detectionRadius = 3f;
+        private float DefaultdetectionRadius;
+        [SerializeField]
+        private float detectionRadiusWhenDamage = 300f;
         [SerializeField]
         private int detectionLines = 10;
         [SerializeField]
         private float lineOfSight = 3f;
+        private float DefaultlineOfSight;
+        [SerializeField]
+        private float lineOfSightWhenDamage = 360f;
+        [SerializeField]
+        private float TimerToStopSeePlayer = 10f;
+        [SerializeField]
+        private float DefaultTimerToStopSeePlayer;
         [SerializeField]
         private float detectionHeight = 3f;
         [SerializeField]
         private SensorType sensorType = SensorType.Sphere;
+        [SerializeField]
+        private bool IsDetectWhenDamage = false;
         [SerializeField]
         private bool objectDetected = false;
         [SerializeField]
@@ -269,7 +281,10 @@ namespace CandiceAIforGames.AI
         public bool IsMoving { get => isMoving; set => isMoving = value; }
         public SensorType SensorType { get => sensorType; set => sensorType = value; }
         public float DetectionRadius { get => detectionRadius; set => detectionRadius = value; }
+        public float DetectionRadiusWhenDamage { get => detectionRadiusWhenDamage; set => detectionRadiusWhenDamage = value; }
         public float LineOfSight { get => lineOfSight; set => lineOfSight = value; }
+        public float LineOfSightWhenDamage { get => lineOfSightWhenDamage; set => lineOfSightWhenDamage = value; }
+        public float timerToStopSeePlayer { get => TimerToStopSeePlayer; set => TimerToStopSeePlayer = value; }
         public float DetectionHeight { get => detectionHeight; set => detectionHeight = value; }
         public bool Is3D { get => is3D; set => is3D = value; }
         public float AttackDamage { get => attackDamage; set => attackDamage = value; }
@@ -325,6 +340,9 @@ namespace CandiceAIforGames.AI
         // Start is called before the first frame update
         void Start()
         {
+            DefaultTimerToStopSeePlayer = TimerToStopSeePlayer;
+            DefaultdetectionRadius = DetectionRadius;
+            DefaultlineOfSight = LineOfSight;
             healthbar = GetComponentInChildren<FloatingEnemyHealthBar>();
             healthbarCanvas = GetComponentInChildren<Canvas>();
 
@@ -360,9 +378,28 @@ namespace CandiceAIforGames.AI
         {
             if (!IsSafeZoneTrue)
             {
+                IsDetectWhenDamage = true;
+
                 HitPoints = HitPoints - damage;
-                IsWallHideBar(healthbarCanvas, true);
+                DetectionRadius = DetectionRadiusWhenDamage;
+                LineOfSight = LineOfSightWhenDamage;
                 healthbar.UpdateBar(HitPoints, MaxHitPoints);
+            }
+        }
+
+        private void TimeToMinimizeDetection()
+        {
+            if (IsDetectWhenDamage)
+            {
+                timerToStopSeePlayer -= Time.deltaTime;
+
+                if (timerToStopSeePlayer <= 0)
+                {
+                    DetectionRadius = DefaultdetectionRadius;
+                    LineOfSight = DefaultlineOfSight;
+                    IsDetectWhenDamage = false;
+                    TimerToStopSeePlayer = DefaultTimerToStopSeePlayer;
+                }
             }
         }
 
@@ -393,6 +430,7 @@ namespace CandiceAIforGames.AI
             Animate();
 
             GotoIf();
+            TimeToMinimizeDetection();
 
         }
 
