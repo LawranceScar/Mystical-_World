@@ -361,6 +361,7 @@ namespace CandiceAIforGames.AI
             if (!IsSafeZoneTrue)
             {
                 HitPoints = HitPoints - damage;
+                IsWallHideBar(healthbarCanvas, true);
                 healthbar.UpdateBar(HitPoints, MaxHitPoints);
             }
         }
