@@ -14,4 +14,8 @@ namespace Assets.Scripts
     {
         public void Heal(float healamount);
     }
+    interface ISafeZonenable
+    {
+        public void IsSafeZone(bool value);
+    }
 }
