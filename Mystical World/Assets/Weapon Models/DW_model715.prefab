@@ -715,12 +715,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Bullet: {fileID: 1159880174095791723, guid: 8cf71d469f8c89045bc3ebfcdd53cc4e, type: 3}
   CubeTransform: {fileID: 8853483532612216664}
-  PivotTransform: {fileID: 8853483532612216650}
   MuzzleTransform: {fileID: 6402655222839811731}
   CameraTransform: {fileID: 0}
-  BulletSpeed: 700
+  BulletSpeed: 450
   ShootTime: 0
-  ShootDelay: 0.1
+  ShootDelay: 0.9
+  damage: 20
 --- !u!1 &8853483532611795834
 GameObject:
   m_ObjectHideFlags: 0

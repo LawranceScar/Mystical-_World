@@ -9,6 +9,16 @@ TagManager:
   - Bullet
   - Sword
   - E
+  - Enemy
+  - TPPoint
+  - CandiceVSFX
+  - Laser
+  - CandiceEnvironment
+  - Projectile
+  - PlayerHealthBar
+  - Candice Agent
+  - Waypoint
+  - Axe
   layers:
   - Default
   - TransparentFX

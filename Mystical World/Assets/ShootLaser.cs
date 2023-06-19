@@ -6,14 +6,14 @@ public class ShootLaser : MonoBehaviour
 {
     public Transform Lazer;
     public static LineRenderer mylinerenderer;
-    public GameObject camera;
+    public Camera camera;
     public float damage = 10;
     public float range = 200.0f;
     public bool huh = true;
     void Start()
     {
         mylinerenderer = GetComponent<LineRenderer>();
-
+        camera = AbudLaser.Shootcamera;
         mylinerenderer.enabled = false;
     }
 

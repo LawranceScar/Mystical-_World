@@ -7,13 +7,14 @@ public class AbudLaser : MonoBehaviour
     [SerializeField] public Transform laserhand;
     [SerializeField] public Camera Camera;
     [SerializeField] public GameObject TopLaser;
+    public static Camera Shootcamera;
     ShootLaser myshootlaser;
     float range = 20f;
     bool IsLaser;
     public static bool workLaser;
     void Start()
     {
-        
+        Shootcamera = Camera;
     }
 
     void Update()

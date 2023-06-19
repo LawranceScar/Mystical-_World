@@ -6,8 +6,8 @@ public class ChangeSlots : MonoBehaviour
 {
     [SerializeField]public GameObject Weapon1;
     [SerializeField]public GameObject Weapon2;
-    [SerializeField] GameObject Weapon3;
-    [SerializeField] GameObject Weapon4;
+    [SerializeField]public GameObject Weapon3;
+    [SerializeField]public GameObject Weapon4;
 
     public static GameObject WeaponSe;
 

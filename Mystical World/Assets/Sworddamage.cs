@@ -7,6 +7,9 @@ public class Sworddamage : MonoBehaviour
 {
     public float damage = 30;
 
+    private void Start()
+    {
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (!other.gameObject.CompareTag("Player"))
