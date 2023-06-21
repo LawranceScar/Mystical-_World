@@ -42,7 +42,6 @@ public class ShootLaser : MonoBehaviour
             {
                 if (hit.transform.gameObject != null && hit.transform.gameObject.CompareTag("Enemy"))
                 {
-                    Debug.Log("AbobA Andr");
                     NormalReceiveDamage(hit.transform.gameObject);
                 }
             }
