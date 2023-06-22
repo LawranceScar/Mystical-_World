@@ -46,6 +46,8 @@ public class Abud_Pistol : MonoBehaviour
     }
     public void GetPistol(Transform pistol)
     {
+        Rigidbody rbpistol = pistol.GetComponent<Rigidbody>();
+        rbpistol.isKinematic = true;
         pistol.SetParent(hand);
         pistol.localPosition = Vector3.zero;
         pistol.localRotation = Quaternion.Euler(-90, 0, 0);
@@ -53,5 +55,7 @@ public class Abud_Pistol : MonoBehaviour
     public void DropPistol(Transform pistol)
     {
         pistol.SetParent(null);
+        Rigidbody rbpistol = pistol.GetComponent<Rigidbody>();
+        rbpistol.isKinematic = false;
     }
 }

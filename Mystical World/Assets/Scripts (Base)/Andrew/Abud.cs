@@ -61,6 +61,8 @@ public class Abud : MonoBehaviour
     }
     public void GiveSword(Transform newSword)
     {
+        Rigidbody rbSword = newSword.GetComponent<Rigidbody>();
+        rbSword.isKinematic = true;
         newSword.SetParent(Sword);
         newSword.localPosition = Vector3.zero;
         newSword.localRotation = Quaternion.Euler(0, 0, 0);
@@ -71,6 +73,8 @@ public class Abud : MonoBehaviour
     public void Drop(Transform newSword)
     {
         newSword.SetParent(null);
+        Rigidbody rbSword = newSword.GetComponent<Rigidbody>();
+        rbSword.isKinematic = false;
         BoxCollider swordcolider = newSword.GetComponent<BoxCollider>();
         swordcolider.isTrigger = false;
     }

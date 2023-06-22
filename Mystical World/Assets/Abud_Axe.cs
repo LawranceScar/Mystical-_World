@@ -60,6 +60,8 @@ public class Abud_Axe : MonoBehaviour
     }
     public void GiveSword(Transform newSword)
     {
+        Rigidbody rbpistol = newSword.GetComponent<Rigidbody>();
+        rbpistol.isKinematic = true;
         newSword.SetParent(Axe);
         newSword.localPosition = Vector3.zero;
         newSword.localRotation = Quaternion.Euler(0, -180, 0);
@@ -67,6 +69,8 @@ public class Abud_Axe : MonoBehaviour
     }
     public void Drop(Transform newSword)
     {
+        Rigidbody rbpistol = newSword.GetComponent<Rigidbody>();
+        rbpistol.isKinematic = true;
         newSword.SetParent(null);
     }
 }
