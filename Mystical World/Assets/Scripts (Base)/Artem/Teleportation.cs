@@ -60,14 +60,12 @@ public class Teleportation : MonoBehaviour
     {
         if(other.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Hello Player");
             for (int i = 0; i < Teleports.Count; i++)
             {
                 if(this.transform == Teleports[i])
                 {
                     IsActiv[i] = true;
                     LastI = i;
-                    Debug.Log("LastIndex" + LastI);
                 }
             }
         }
