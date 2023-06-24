@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class BossCollider : MonoBehaviour
 {
     [SerializeField] StartBoss Boss;
@@ -22,4 +23,5 @@ public class BossCollider : MonoBehaviour
             Boss.DidAttack = false;
         }
     }
+    
 }

@@ -719,8 +719,13 @@ MonoBehaviour:
   CameraTransform: {fileID: 0}
   BulletSpeed: 700
   ShootTime: 0
+<<<<<<< HEAD
   ShootDelay: 0.1
   damage: 30
+=======
+  ShootDelay: 0.9
+  damage: 20
+>>>>>>> parent of a7b13a1 (Add Physics for Weapon and better slots)
 --- !u!1 &8853483532611795834
 GameObject:
   m_ObjectHideFlags: 0
