@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 3679567035873366301}
   - component: {fileID: 3679567035873366290}
   - component: {fileID: 3679567035873366291}
-  - component: {fileID: -233072495368695816}
   m_Layer: 0
   m_Name: sabre
   m_TagString: Sword
@@ -94,7 +93,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3679567035871432669}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.4283176, y: 1.6647196, z: 0.0822382}
@@ -112,19 +111,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
---- !u!54 &-233072495368695816
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3679567035871432669}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0

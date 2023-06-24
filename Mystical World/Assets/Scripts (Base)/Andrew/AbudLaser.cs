@@ -53,16 +53,12 @@ public class AbudLaser : MonoBehaviour
     }
     public void GetPistol(Transform pistol)
     {
-        Rigidbody rbpistol = pistol.GetComponent<Rigidbody>();
-        rbpistol.isKinematic = true;
         pistol.SetParent(laserhand);
         pistol.localPosition = Vector3.zero;
         pistol.localRotation = Quaternion.Euler(0, 0, 0);
     }
     public void DropPistol(Transform pistol)
     {
-        Rigidbody rbpistol = pistol.GetComponent<Rigidbody>();
-        rbpistol.isKinematic = false;
         pistol.SetParent(null);
     }
 }
