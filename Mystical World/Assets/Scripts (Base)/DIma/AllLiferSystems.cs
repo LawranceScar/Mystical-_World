@@ -87,7 +87,7 @@ public class AllLiferSystems : MonoBehaviour, IDamagable, IHealable, ISafeZonena
 
     void Update()
     {
-        Debug.Log("Bool " +IsSafeZoneTrue);
+        Debug.Log("SafeZone: " +IsSafeZoneTrue);
         // Debug.Log(DefaultStaminaAmount);
         StaminaCounter();
         HealthFunc();

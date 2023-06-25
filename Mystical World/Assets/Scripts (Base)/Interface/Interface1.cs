@@ -18,4 +18,9 @@ namespace Assets.Scripts
     {
         public void IsSafeZone(bool value);
     }
+
+    interface IStartDetectable
+    {
+        public void StartOtherEnemiesWhenAttack();
+    }
 }

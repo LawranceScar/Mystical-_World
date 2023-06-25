@@ -30,9 +30,12 @@ namespace CandiceAIforGames.AI.Editors
         private bool showTags = true;
         bool showAllyTags = true;
         bool showEnemyTags = true;
+        bool showEnemyStartOther = true;
         private int tagCount = 0;
         private int enemyTagCount;
         private int allyTagCount;
+        private int EnemyStartOtherCount;
+        //EnemyStartOther
         void OnEnable()
         {
             //Store a reference to the AI Controller script
@@ -152,6 +155,8 @@ namespace CandiceAIforGames.AI.Editors
             character.MaxHitPoints = EditorGUILayout.FloatField(label, character.MaxHitPoints);
             label = new GUIContent("Current Hit Points", "");
             character.HitPoints = EditorGUILayout.FloatField(label, character.HitPoints);
+            label = new GUIContent("Current Resistance", "");
+            character.ResistanceDamage = EditorGUILayout.FloatField(label, character.ResistanceDamage);
             label = new GUIContent("Is 3D", "Uncheck if this character is in 2D space. Used to draw the detection settings in the SceneView UI.");
             character.Is3D = EditorGUILayout.Toggle(label, character.Is3D);
             label = new GUIContent("Health Bar", "");
@@ -254,6 +259,50 @@ namespace CandiceAIforGames.AI.Editors
                     EditorGUILayout.Space();
                 }
             }
+
+            EditorGUILayout.Space();
+            EditorGUILayout.Space();
+            label = new GUIContent("Enemies Start Other Enemies", "All the Tags that the character will consider as an enemy. NOTE: The default reaction is to attack.");
+            EditorGUILayout.LabelField(label, guiStyle);
+            showEnemyStartOther = EditorGUILayout.Foldout(showEnemyStartOther, label);
+            if (showEnemyStartOther)
+            {
+                EnemyStartOtherCount = character.EnemyStartOther.Count;
+                EnemyStartOtherCount = EditorGUILayout.IntField("Size", EnemyStartOtherCount);
+
+                if (EnemyStartOtherCount != character.EnemyStartOther.Count)
+                {
+                    int i = 0;
+                    while (EnemyStartOtherCount > character.EnemyStartOther.Count)
+                    {
+                        character.EnemyStartOther.Add("EnemyStartother" + i);
+                        i++;
+                    }
+                    while (EnemyStartOtherCount < character.EnemyStartOther.Count)
+                    {
+                        character.EnemyStartOther.RemoveAt(character.EnemyStartOther.Count - 1);
+                    }
+                }
+
+                for (int i = 0; i < character.EnemyStartOther.Count; i++)
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    EditorGUILayout.LabelField("Element " + i);
+                    string tag = "";
+                    tag = EditorGUILayout.TagField(character.EnemyStartOther[i]);
+
+                    if (character.AllyTags.Contains(tag))
+                    {
+                        EditorUtility.DisplayDialog("AI Controller", "Tag '" + tag + "' already added to ally tags", "OK");
+                    }
+                    else
+                    {
+                        character.EnemyStartOther[i] = tag;
+                    }
+                    EditorGUILayout.EndHorizontal();
+                    EditorGUILayout.Space();
+                }
+            }
         }
 
         void DrawDetectionGUI()
@@ -268,6 +317,10 @@ namespace CandiceAIforGames.AI.Editors
             character.DetectionRadius = EditorGUILayout.FloatField(label, character.DetectionRadius);
             label = new GUIContent("Detection Radius When Damage", "Boom radius");
             character.DetectionRadiusWhenDamage = EditorGUILayout.FloatField(label, character.DetectionRadiusWhenDamage);
+            label = new GUIContent("Detection Radius when reload", "Boom radius");
+            character.DefaultDetectionRadius = EditorGUILayout.FloatField(label, character.DefaultDetectionRadius);
+            label = new GUIContent("Max Patience to start detect", "Boom patience");
+            character.MaxPatienceDetect = EditorGUILayout.IntField(label, character.MaxPatienceDetect);
             label = new GUIContent("Detection Lines", "The amount of raycast lines the agent will emit in order to detect obstacles, evenly distrubuted from the center.");
             character.DetectionLines = EditorGUILayout.IntField(label, character.DetectionLines);
             label = new GUIContent("Detection Height", "The height at which the agent can detect objects.");
@@ -276,6 +329,8 @@ namespace CandiceAIforGames.AI.Editors
             character.LineOfSight = EditorGUILayout.FloatField(label, character.LineOfSight);
             label = new GUIContent("Line of Sight When Damage", "When Damage");
             character.LineOfSightWhenDamage = EditorGUILayout.FloatField(label, character.LineOfSightWhenDamage);
+            label = new GUIContent("Line of Sight When reload", "When Damage");
+            character.DefaultLineOfSight = EditorGUILayout.FloatField(label, character.DefaultLineOfSight);
             label = new GUIContent("Time To stop see player", "Null");
             character.timerToStopSeePlayer = EditorGUILayout.FloatField(label, character.timerToStopSeePlayer);
 

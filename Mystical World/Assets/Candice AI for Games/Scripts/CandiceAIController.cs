@@ -44,7 +44,7 @@ namespace CandiceAIforGames.AI
     #endregion
     //New inheritance chain from CandiceAnimationManager, which in turns inherits from MonoBehaviour. 
     //Scene Manager will override all aspects on future releases
-    public class CandiceAIController : CandiceAnimationManager, IDamagable, ISafeZonenable
+    public class CandiceAIController : CandiceAnimationManager, IDamagable, ISafeZonenable, IStartDetectable 
     {
 
         #region Member Variables
@@ -58,6 +58,8 @@ namespace CandiceAIforGames.AI
         public float maxHitPoints = 100f;
         [SerializeField]
         public float hitPoints = 100f;
+        [SerializeField]
+        public float resistancedamage = 0.20f;
 
         [SerializeField]
         FloatingEnemyHealthBar healthbar;
@@ -98,6 +100,8 @@ namespace CandiceAIforGames.AI
         [SerializeField]
         private List<GameObject> players = new List<GameObject>();
         [SerializeField]
+        private List<GameObject> enemiesstartotherobject = new List<GameObject>();
+        [SerializeField]
         private GameObject player;
         [SerializeField]
         public GameObject PlayerCast;
@@ -116,14 +120,22 @@ namespace CandiceAIforGames.AI
          */
         [SerializeField]
         private float detectionRadius = 3f;
-        private float DefaultdetectionRadius;
         [SerializeField]
         private float detectionRadiusWhenDamage = 300f;
         [SerializeField]
         private int detectionLines = 10;
         [SerializeField]
         private float lineOfSight = 3f;
-        private float DefaultlineOfSight;
+        [SerializeField]
+        private float DefaultlineOfSight = 360f;
+        [SerializeField]
+        private float DefaultdetectionRadius = 300f;
+        [SerializeField]
+        private int Patience = 0;
+        [SerializeField]
+        private int NewPatience = 0;
+        [SerializeField]
+        private int MaxPatience = 3;
         [SerializeField]
         private float lineOfSightWhenDamage = 360f;
         [SerializeField]
@@ -148,6 +160,8 @@ namespace CandiceAIforGames.AI
         private List<string> objectTags = new List<string>();
         [SerializeField]
         public List<string> enemyTags = new List<string>();
+        [SerializeField]
+        public List<string> enemystartother = new List<string>();
         [SerializeField]
         private List<string> allyTags = new List<string>();
         [SerializeField]
@@ -269,6 +283,7 @@ namespace CandiceAIforGames.AI
         public int AgentID { get => agentID; set => agentID = value; }
         
         public List<GameObject> Enemies { get => enemies; set => enemies = value; }
+        public List<GameObject> EnemiesStartOtherObject { get => enemiesstartotherobject; set => enemiesstartotherobject = value; }
         public List<GameObject> Allies { get => allies; set => allies = value; }
         public List<GameObject> Players { get => players; set => players = value; }
         public GameObject Player { get => player; set => player = value; }
@@ -282,6 +297,9 @@ namespace CandiceAIforGames.AI
         public SensorType SensorType { get => sensorType; set => sensorType = value; }
         public float DetectionRadius { get => detectionRadius; set => detectionRadius = value; }
         public float DetectionRadiusWhenDamage { get => detectionRadiusWhenDamage; set => detectionRadiusWhenDamage = value; }
+        public float DefaultDetectionRadius { get => DefaultdetectionRadius; set => DefaultdetectionRadius = value; }
+        public float DefaultLineOfSight { get => DefaultlineOfSight; set => DefaultlineOfSight = value; }
+        public int MaxPatienceDetect { get => MaxPatience; set => MaxPatience = value; }
         public float LineOfSight { get => lineOfSight; set => lineOfSight = value; }
         public float LineOfSightWhenDamage { get => lineOfSightWhenDamage; set => lineOfSightWhenDamage = value; }
         public float timerToStopSeePlayer { get => TimerToStopSeePlayer; set => TimerToStopSeePlayer = value; }
@@ -294,6 +312,8 @@ namespace CandiceAIforGames.AI
         public float ObstacleAvoidaceDistance { get => obstacleAvoidaceDistance; set => obstacleAvoidaceDistance = value; }
         public float ObstacleAvoidanceAOE { get => obstacleAvoidanceAOE; set => obstacleAvoidanceAOE = value; }
         public List<string> EnemyTags { get => enemyTags; set => enemyTags = value; }
+
+        public List<string> EnemyStartOther { get => enemystartother; set => enemystartother = value; }
         public List<string> AllyTags { get => allyTags; set => allyTags = value; }
         public List<string> ObjectTags { get => objectTags; set => objectTags = value; }
         public float AttackRange { get => attackRange; set => attackRange = value; }
@@ -313,6 +333,7 @@ namespace CandiceAIforGames.AI
         public bool EnableRagdoll { get => enableRagdoll; set => enableRagdoll = value; }
         public float MaxHitPoints { get => maxHitPoints; set => maxHitPoints = value; }
         public float HitPoints { get => hitPoints; set => hitPoints = value; }
+        public float ResistanceDamage { get => resistancedamage; set => resistancedamage = value; }
         public bool IsCalculatingPath { get => isCalculatingPath; set => isCalculatingPath = value; }
         public bool IsFollowingPath { get => isFollowingPath; set => isFollowingPath = value; }
         public float waittime { get => WaitingTime; set => WaitingTime = value; }
@@ -341,8 +362,8 @@ namespace CandiceAIforGames.AI
         void Start()
         {
             DefaultTimerToStopSeePlayer = TimerToStopSeePlayer;
-            DefaultdetectionRadius = DetectionRadius;
-            DefaultlineOfSight = LineOfSight;
+           // DefaultdetectionRadius = DetectionRadius;
+           // DefaultlineOfSight = LineOfSight;
             healthbar = GetComponentInChildren<FloatingEnemyHealthBar>();
             healthbarCanvas = GetComponentInChildren<Canvas>();
 
@@ -378,25 +399,45 @@ namespace CandiceAIforGames.AI
         {
             if (!IsSafeZoneTrue)
             {
-                IsDetectWhenDamage = true;
-
-                HitPoints = HitPoints - damage;
-                DetectionRadius = DetectionRadiusWhenDamage;
-                LineOfSight = LineOfSightWhenDamage;
+                if (ResistanceDamage > 0)
+                {
+                    HitPoints = HitPoints - (damage * ResistanceDamage);
+                }
+                else
+                {
+                    HitPoints = HitPoints - damage;
+                }
+                NewPatience++;
+                DetectFunc();
                 healthbar.UpdateBar(HitPoints, MaxHitPoints);
             }
         }
 
+        public void StartOtherEnemiesWhenAttack()
+        {
+            DetectFunc();
+        }
+
+
+        private void DetectFunc()
+        {
+            IsDetectWhenDamage = true;
+            DetectionRadius = DetectionRadiusWhenDamage;
+            LineOfSight = LineOfSightWhenDamage;
+        }
+
         private void TimeToMinimizeDetection()
         {
+           // Debug.Log(NewPatience);
             if (IsDetectWhenDamage)
             {
                 timerToStopSeePlayer -= Time.deltaTime;
 
                 if (timerToStopSeePlayer <= 0)
                 {
-                    DetectionRadius = DefaultdetectionRadius;
-                    LineOfSight = DefaultlineOfSight;
+                    DetectionRadius = DefaultDetectionRadius;
+                    LineOfSight = DefaultLineOfSight;
+                    NewPatience = 0;
                     IsDetectWhenDamage = false;
                     TimerToStopSeePlayer = DefaultTimerToStopSeePlayer;
                 }
@@ -832,6 +873,15 @@ namespace CandiceAIforGames.AI
                 return false;
         }
 
+        public void StartOtherEnemies(GameObject StartDetectableObject)
+        {
+            IStartDetectable IStartDetectableObject = StartDetectableObject.GetComponent<IStartDetectable>();
+            if (IStartDetectableObject != null)
+            {
+                IStartDetectableObject.StartOtherEnemiesWhenAttack(); //ReceiveRealDamage
+            }
+        }
+
         void onObjectFound(CandiceDetectionResults results)
         {
             /*This is where you put your detection logic. 
@@ -844,7 +894,20 @@ namespace CandiceAIforGames.AI
                 {
                     foreach (string key in results.objects.Keys)
                     {
-
+                        if (EnemyStartOther.Contains(key))
+                        {
+                            if (IsDetectWhenDamage)
+                            {
+                                EnemiesStartOtherObject.AddRange(results.objects[key]);
+                                if (MaxPatienceDetect <= NewPatience)
+                                {
+                                    foreach (GameObject objectStart in EnemiesStartOtherObject)
+                                    {
+                                        StartOtherEnemies(objectStart);
+                                    }
+                                }
+                            }
+                        }
                         if (EnemyTags.Contains(key))
                         {
                             RaycastHit hitresult;
@@ -860,7 +923,6 @@ namespace CandiceAIforGames.AI
                                     MainTarget = Enemies[0];
                                     if (isKnowAttacking == true)
                                     {
-                                        //  MovePoint = null;
                                         MovePoint = this.transform.position;
                                         agent.isStopped = true;
 
@@ -915,6 +977,7 @@ namespace CandiceAIforGames.AI
             AllyDetected = false;
             EnemyDetected = false;
             PlayerDetected = false;
+            EnemiesStartOtherObject.Clear();
             Enemies.Clear();
             Allies.Clear();
             Players.Clear();
