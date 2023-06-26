@@ -23,4 +23,8 @@ namespace Assets.Scripts
     {
         public void StartOtherEnemiesWhenAttack();
     }
+    interface IResistancable
+    {
+        public void UpResistance(float resistance);
+    }
 }

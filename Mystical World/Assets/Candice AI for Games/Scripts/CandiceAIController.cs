@@ -44,7 +44,7 @@ namespace CandiceAIforGames.AI
     #endregion
     //New inheritance chain from CandiceAnimationManager, which in turns inherits from MonoBehaviour. 
     //Scene Manager will override all aspects on future releases
-    public class CandiceAIController : CandiceAnimationManager, IDamagable, ISafeZonenable, IStartDetectable 
+    public class CandiceAIController : CandiceAnimationManager, IDamagable, ISafeZonenable, IStartDetectable, IHealable, IResistancable
     {
 
         #region Member Variables
@@ -60,6 +60,24 @@ namespace CandiceAIforGames.AI
         public float hitPoints = 100f;
         [SerializeField]
         public float resistancedamage = 0.20f;
+        [SerializeField]
+        public float maxresistancedamage = 0.20f;
+        [SerializeField]
+        public float amountOfHeal = 3f;
+        [SerializeField]
+        public float maxAmountOfHeal = 3f;
+        [SerializeField]
+        public bool IshealEnemy;
+        [SerializeField]
+        public bool IsStopToHeal;
+        [SerializeField]
+        public float timeWhenStartHeal = 8f;
+        [SerializeField]
+        public float timeToStopMoveWhenHeal = 1f;
+        [SerializeField]
+        public float defaulttimeToStopMoveWhenHeal = 1f;
+        [SerializeField]
+        public float defaulttimeWhenStartHeal = 8f;
 
         [SerializeField]
         FloatingEnemyHealthBar healthbar;
@@ -334,6 +352,14 @@ namespace CandiceAIforGames.AI
         public float MaxHitPoints { get => maxHitPoints; set => maxHitPoints = value; }
         public float HitPoints { get => hitPoints; set => hitPoints = value; }
         public float ResistanceDamage { get => resistancedamage; set => resistancedamage = value; }
+        public float MaxResistanceDamage { get => maxresistancedamage; set => maxresistancedamage = value; }
+        public float AmountOfHeal { get => amountOfHeal; set => amountOfHeal = value; }
+        public float MaxAmountOfHeal { get => maxAmountOfHeal; set => maxAmountOfHeal = value; }
+        public float TimeWhenStartHeal { get => timeWhenStartHeal; set => timeWhenStartHeal = value; }
+        public float DefaultTimeWhenStartHeal { get => defaulttimeWhenStartHeal; set => defaulttimeWhenStartHeal = value; }
+        public float TimeWhenStopMoveToHeal { get => timeToStopMoveWhenHeal; set => timeToStopMoveWhenHeal = value; }
+        public float DefaultTimeWhenStopMoveToHeal { get => defaulttimeToStopMoveWhenHeal; set => defaulttimeToStopMoveWhenHeal = value; }
+        public bool IsHealEnemy { get => IshealEnemy; set => IshealEnemy = value; }
         public bool IsCalculatingPath { get => isCalculatingPath; set => isCalculatingPath = value; }
         public bool IsFollowingPath { get => isFollowingPath; set => isFollowingPath = value; }
         public float waittime { get => WaitingTime; set => WaitingTime = value; }
@@ -402,16 +428,38 @@ namespace CandiceAIforGames.AI
                 if (ResistanceDamage > 0)
                 {
                     HitPoints = HitPoints - (damage * ResistanceDamage);
+                    TimeWhenStartHeal = DefaultTimeWhenStartHeal;
                 }
                 else
                 {
                     HitPoints = HitPoints - damage;
+                    TimeWhenStartHeal = DefaultTimeWhenStartHeal;
                 }
                 NewPatience++;
                 DetectFunc();
                 healthbar.UpdateBar(HitPoints, MaxHitPoints);
             }
         }
+
+        public void UpResistance(float resistance)
+        {
+            ResistanceDamage = resistance;
+        }
+
+        public void Heal(float heal)
+        {
+            if (HitPoints < MaxHitPoints)
+            {
+                HitPoints = HitPoints += heal;
+            }
+            if (HitPoints > MaxHitPoints)
+            {
+                HitPoints = MaxHitPoints;
+            }
+            healthbar.UpdateBar(HitPoints, MaxHitPoints);
+        }
+
+
 
         public void StartOtherEnemiesWhenAttack()
         {
@@ -742,6 +790,15 @@ namespace CandiceAIforGames.AI
                 IDamagableObject.TakerDamage(attackDamage); //ReceiveRealDamage
             }
         }
+
+        public void NormalTakeHeal(GameObject HealableObject)
+        {
+            IHealable IHealableObject = HealableObject.GetComponent<IHealable>();
+            if (IHealableObject != null)
+            {
+                IHealableObject.Heal(AmountOfHeal); //ReceiveRealDamage
+            }
+        }
         public void Wander()
         {
             /* Does nothing except pick a new destination to go to
@@ -896,9 +953,22 @@ namespace CandiceAIforGames.AI
                     {
                         if (EnemyStartOther.Contains(key))
                         {
+                            EnemiesStartOtherObject.AddRange(results.objects[key]);
+                            if (IsHealEnemy && HitPoints < MaxHitPoints)
+                            {
+                                TimeWhenStartHeal -= Time.deltaTime;
+                                if (TimeWhenStartHeal <= 0)
+                                {
+                                    foreach(GameObject objectToHeal in EnemiesStartOtherObject)
+                                    {
+                                        NormalTakeHeal(objectToHeal);
+                                    }
+                                    IsStopToHeal = true;
+                                    TimeWhenStartHeal = DefaultTimeWhenStartHeal;
+                                }
+                            }
                             if (IsDetectWhenDamage)
                             {
-                                EnemiesStartOtherObject.AddRange(results.objects[key]);
                                 if (MaxPatienceDetect <= NewPatience)
                                 {
                                     foreach (GameObject objectStart in EnemiesStartOtherObject)
@@ -910,34 +980,48 @@ namespace CandiceAIforGames.AI
                         }
                         if (EnemyTags.Contains(key))
                         {
-                            RaycastHit hitresult;
-                            Physics.Raycast(ray, out hitresult);
-                            if (hitresult.collider != null)
+                            if (!IsStopToHeal)
                             {
-                                if (hitresult.collider.gameObject == player.gameObject)
+                                RaycastHit hitresult;
+                                Physics.Raycast(ray, out hitresult);
+                                if (hitresult.collider != null)
                                 {
-                                    IsKnowWhereUnit = true;
-                                    EnemyDetected = true;
-                                    Enemies.AddRange(results.objects[key]);
-                                    IsWallHideBar(healthbarCanvas, true);
-                                    MainTarget = Enemies[0];
-                                    if (isKnowAttacking == true)
+                                    if (hitresult.collider.gameObject == player.gameObject)
                                     {
-                                        MovePoint = this.transform.position;
-                                        agent.isStopped = true;
+                                        IsKnowWhereUnit = true;
+                                        EnemyDetected = true;
+                                        Enemies.AddRange(results.objects[key]);
+                                        IsWallHideBar(healthbarCanvas, true);
+                                        MainTarget = Enemies[0];
+                                        if (isKnowAttacking == true)
+                                        {
+                                            MovePoint = this.transform.position;
+                                            agent.isStopped = true;
 
+                                        }
+                                        else
+                                        {
+                                            MovePoint = MainTarget.transform.position;
+                                            agent.isStopped = false;
+                                            agent.SetDestination(MovePoint);
+                                        }
+                                        LookPoint = MainTarget.transform.position;
+                                        AttackTarget = Enemies[0];
                                     }
-                                    else
-                                    {
-                                        MovePoint = MainTarget.transform.position;
-                                        agent.isStopped = false;
-                                        agent.SetDestination(MovePoint);
-                                    }
-                                    LookPoint = MainTarget.transform.position;
-                                    AttackTarget = Enemies[0];
+                                }
+                                Debug.DrawLine(ray.origin, hitresult.point, Color.red);
+                            }
+                            else
+                            {
+                                MovePoint = this.transform.position;
+                                agent.SetDestination(MovePoint);
+                                TimeWhenStopMoveToHeal -= Time.deltaTime;
+                                if (TimeWhenStopMoveToHeal <= 0)
+                                {
+                                    IsStopToHeal = false;
+                                    TimeWhenStopMoveToHeal = DefaultTimeWhenStartHeal;
                                 }
                             }
-                            Debug.DrawLine(ray.origin, hitresult.point, Color.red);
                         }
                         if (AllyTags.Contains(key))
                         {
@@ -965,7 +1049,10 @@ namespace CandiceAIforGames.AI
 
             if (EnemyDetected == false)
             {
-                IsWallHideBar(healthbarCanvas, false);
+                if (!IsStopToHeal)
+                {
+                    IsWallHideBar(healthbarCanvas, false);
+                }
                 IsKnowWhereUnit = false;
                 MainTarget = null;
                 AttackTarget = null;
@@ -981,11 +1068,6 @@ namespace CandiceAIforGames.AI
             Enemies.Clear();
             Allies.Clear();
             Players.Clear();
-        }
-
-        private void CheckDetect()
-        {
-
         }
         void onAttackComplete(bool success)
         {
