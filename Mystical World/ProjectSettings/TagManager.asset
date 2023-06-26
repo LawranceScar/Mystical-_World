@@ -19,6 +19,7 @@ TagManager:
   - Candice Agent
   - Waypoint
   - Axe
+  - ShieldUI
   layers:
   - Default
   - TransparentFX

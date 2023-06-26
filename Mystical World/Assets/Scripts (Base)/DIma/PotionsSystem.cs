@@ -9,8 +9,8 @@ public class PotionsSystem : MonoBehaviour
     public TakerAllLiferSystems System;
 
     [Header("Potions Settings")]
-    public int AmountOfPotions = 3;
-    public int MaxAmountOfPotions = 3;
+    public float AmountOfPotions = 3;
+    public float MaxAmountOfPotions = 3;
     public int AmountOfHeal = 20;
 
     [Header("Timer")]

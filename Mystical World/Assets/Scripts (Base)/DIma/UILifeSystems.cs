@@ -26,7 +26,7 @@ public class UILifeSystems : MonoBehaviour
     public string AnimationCheck;
 
     [Header("Potions UI")]
-    public TMP_Text AmountOfPotions;
+    public Image AmountOfPotions;
     public Image TimeRadialPotion;
     public Image BackTimeRadialPotion;
     public TMP_Text TimeText;
@@ -154,20 +154,16 @@ public class UILifeSystems : MonoBehaviour
 
     private void PotionsUI()
     {
-        AmountOfPotions.text = potionsSystem.AmountOfPotions.ToString();
+
         if (potionsSystem.TimerWhenStartNextHeal != 0)
         {
             TimeRadialPotion.fillAmount = Mathf.Lerp(TimeRadialPotion.fillAmount, potionsSystem.TimerWhenStartNextHeal / potionsSystem.MaxTime, 10);
             TimeText.text = potionsSystem.TimerWhenStartNextHeal.ToString("0.00");
         }
 
-        if (potionsSystem.AmountOfPotions < potionsSystem.MaxAmountOfPotions && potionsSystem.AmountOfPotions != 1 && potionsSystem.AmountOfPotions != 0)
+        if (potionsSystem.AmountOfPotions != potionsSystem.MaxAmountOfPotions)
         {
-            AmountOfPotions.color = Color.Lerp(Color.yellow, SetColour(255, 133, 40, 255), potionsSystem.AmountOfPotions / potionsSystem.MaxAmountOfPotions);
-        }
-        else if (potionsSystem.AmountOfPotions == 1 || potionsSystem.AmountOfPotions == 0)
-        {
-            AmountOfPotions.color = SetColour(255, 72, 40, 255);
+            AmountOfPotions.fillAmount = Mathf.Lerp(AmountOfPotions.fillAmount, potionsSystem.AmountOfPotions / potionsSystem.MaxAmountOfPotions, 10);
         }
     }
 
