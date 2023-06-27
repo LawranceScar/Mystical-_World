@@ -1,27 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Scripts;
 
 public class PoisonedMist : MonoBehaviour
 {
-    private float DelayTime = 0.5f;
-    private float DamageTime = 0.0f;
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
+    public float DelayTime = 0.5f;
+    public float DefaultDelay = 0.5f;
+    public float KillDamage = 10f;
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.CompareTag("Player") && Time.time >= DamageTime)
+
+        if (other.gameObject.CompareTag("Player"))
         {
-            DamageTime = Time.time + DelayTime;
-                                                    //тут треба віднімати 10 відсотків
+            DelayTime -= Time.deltaTime;
+            if (DelayTime <= 0)
+            {
+                NormalReceiveDamage(other.gameObject);
+                DelayTime = DefaultDelay;
+            }
+        }
+    }
+
+
+    public void NormalReceiveDamage(GameObject DamagableObject)
+    {
+        IDamagable IDamagableObject = DamagableObject.GetComponent<IDamagable>();
+        if (IDamagableObject != null)
+        {
+            IDamagableObject.TakerDamage(KillDamage); //ReceiveRealDamage
         }
     }
 }

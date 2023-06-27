@@ -563,6 +563,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22907d0ad42aae44f88b5bbeae33e3fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DelayTime: 0.5
+  DefaultDelay: 0.5
+  KillDamage: 10
 --- !u!1001 &429689053
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1002,6 +1005,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas 1 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1699834298571521674, guid: 7cacc34598a36434ca9cb2404bbcaf71, type: 3}
+      propertyPath: SystemAller
+      value: 
+      objectReference: {fileID: 1030341236}
+    - target: {fileID: 1699834298571521674, guid: 7cacc34598a36434ca9cb2404bbcaf71, type: 3}
+      propertyPath: potionsSystem
+      value: 
+      objectReference: {fileID: 1030341245}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7cacc34598a36434ca9cb2404bbcaf71, type: 3}
 --- !u!1001 &823505286
