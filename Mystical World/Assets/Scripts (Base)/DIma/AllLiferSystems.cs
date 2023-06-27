@@ -6,18 +6,18 @@ using UnityEngine;
 public class AllLiferSystems : MonoBehaviour, IDamagable, IHealable, ISafeZonenable
 {
     [Header("Health Settings")]
-    [SerializeField] protected float HealthPlayer = 100; // Скільки всього хп
-    [SerializeField] protected float HealthHeal = 1; // Скільки буде лікуватися за одиницю часу
-   // [SerializeField] protected float TimeToHeal = 4.0f; // Час лікування
-   // [SerializeField] protected int NumberWhenHeal = 20; // Коли можна бути використати Heal
+    [SerializeField] protected float HealthPlayer = 100; // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
+    [SerializeField] protected float HealthHeal = 1; // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+   // [SerializeField] protected float TimeToHeal = 4.0f; // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+   // [SerializeField] protected int NumberWhenHeal = 20; // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Heal
     [SerializeField] protected float WhenRespawn = 5.0f;
 
     [Header("Stamina Settings")]
 
-    [SerializeField] protected int Stamina = 100; // Скільки всього стаміни 
-    [SerializeField] protected int StaminaKiller = 1; // Скільки віднімається за раз
-    [SerializeField] protected float TimerAmountKiller = 0.03f; // Скільки часу на перезарядку самої стаміни при використанні
-    [SerializeField] protected float TimerRespawnStaminaAmount = 3.0f; // Скільки часу стаміна робить reload
+    [SerializeField] protected int Stamina = 100; // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 
+    [SerializeField] protected int StaminaKiller = 1; // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ
+    [SerializeField] protected float TimerAmountKiller = 0.03f; // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    [SerializeField] protected float TimerRespawnStaminaAmount = 3.0f; // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ reload
 
     [Header ("Mp Settings")]
     [SerializeField] protected int Mana = 40;
@@ -26,13 +26,13 @@ public class AllLiferSystems : MonoBehaviour, IDamagable, IHealable, ISafeZonena
     [SerializeField] protected float TimerManaAmount = 0.03f;
     [SerializeField] protected float TimerRespawnManaAmount = 3.0f;
 
-    // Не чіпати
+    // пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
    // [HideInInspector] public float DefaultHP;
    // [HideInInspector] public int DefaultStamina;
   //  [HideInInspector] public int DefaultMP;
-    [HideInInspector] public int MpAmount; // Кількість мани
-    [HideInInspector] public int StaminaAmount; // Кількість стаміни
-    [HideInInspector] public float Health; // Кількість ХП
+    [HideInInspector] public int MpAmount; // КіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+    [HideInInspector] public int StaminaAmount; // КіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+    [HideInInspector] public float Health; // КіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
 
     private float DefaultTimerRespawn;
     private float DefaultTimerAmount;
@@ -40,12 +40,12 @@ public class AllLiferSystems : MonoBehaviour, IDamagable, IHealable, ISafeZonena
     private float DefaultTimerManaRespawn;
     private float DefaultWhenRespawn;
 
-    // не чіпати
+    // пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
     private bool IsStartedStamina;
     private bool IsStartedMp;
     private bool IsSafeZoneTrue;
 
-    public static bool IsDead; // Якщо смерть
+    public static bool IsDead; // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 
     public void TakerDamage(float damage)
     {
