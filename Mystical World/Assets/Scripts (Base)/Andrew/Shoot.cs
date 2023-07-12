@@ -9,6 +9,7 @@ public class Shoot : MonoBehaviour
     public Transform CubeTransform;
     public Transform MuzzleTransform;
     public Transform CameraTransform;
+    public GameObject Particle;
     public float BulletSpeed = 700.0f;
     public float ShootTime = 0.0f;
     public float ShootDelay = 0.1f;
@@ -24,6 +25,8 @@ public class Shoot : MonoBehaviour
 
     public void ShootBullet()
     {
+        GameObject newpart = Instantiate(Particle, MuzzleTransform.transform.position, this.transform.rotation);
+        Destroy(newpart, 0.2f);
         Vector3 TargetPoint = CameraTransform.position + CameraTransform.forward * 100.0f;
         RaycastHit HitResult;
         if (Physics.Raycast(CameraTransform.position, CameraTransform.forward, out HitResult, 100.0f))
@@ -34,8 +37,10 @@ public class Shoot : MonoBehaviour
         if (Time.time >= ShootTime)
         {
             ShootTime = Time.time + ShootDelay;
+           
 
             GameObject newBullet = Instantiate(Bullet, MuzzleTransform.position, Quaternion.LookRotation(TargetPoint - CubeTransform.position));
+
             Destroy(newBullet, 10.0f);
             
 

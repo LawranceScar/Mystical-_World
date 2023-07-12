@@ -30,6 +30,8 @@ public class BulletScript : MonoBehaviour
         if (!other.gameObject.CompareTag("Player"))
         {
             NormalReceiveDamage(other.gameObject);
+            Debug.Log("Hi");
         }
+       Destroy(this.gameObject);
     }
 }
