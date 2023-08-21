@@ -35,7 +35,6 @@ public class AbudLaser : MonoBehaviour
            myshootlaser = TopLaser.GetComponent<ShootLaser>();
             if(myshootlaser != null)
             {
-
                 myshootlaser.ShootLazer();
             }
            
