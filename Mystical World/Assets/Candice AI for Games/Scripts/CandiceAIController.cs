@@ -91,6 +91,19 @@ namespace CandiceAIforGames.AI
         Ray ray;
         Ray raycasdt;
 
+        [SerializeField]
+        public GameObject projectilePrefab; // Префаб снаряда
+        [SerializeField]
+        public Transform firePoint; // Место, откуда вылетают снаряды
+        [SerializeField]
+        public float fireRate = 2f; // Скорость стрельбы (выстрелов в секунду)
+        [SerializeField]
+        public float projectileForce = 2f; // Скорость стрельбы (выстрелов в секунду)
+        [SerializeField]
+        public float projectilePrefabDestroy = 2f; // Скорость стрельбы (выстрелов в секунду)
+        [SerializeField]
+        private bool isLongAttack = false;
+
 
         /*
          * New Animation Variables
@@ -335,6 +348,9 @@ namespace CandiceAIforGames.AI
         public List<string> AllyTags { get => allyTags; set => allyTags = value; }
         public List<string> ObjectTags { get => objectTags; set => objectTags = value; }
         public float AttackRange { get => attackRange; set => attackRange = value; }
+        public float FireRate { get => fireRate; set => fireRate = value; }
+        public float ProjectileForce { get => projectileForce; set => projectileForce = value; }
+        public float ProjectilePrefabDestoy { get => projectilePrefabDestroy; set => projectilePrefabDestroy = value; }
         public bool EnableHeadLook { get => enableHeadLook; set => enableHeadLook = value; }
         public GameObject HeadLookTarget { get => headLookTarget; set => headLookTarget = value; }
         public float HeadLookIntensity { get => headLookIntensity; set => headLookIntensity = value; }
@@ -342,8 +358,11 @@ namespace CandiceAIforGames.AI
         public Vector3 MovePoint { get => movePoint; set => movePoint = value; }
         public AttackType AttackType { get => attackType; set => attackType = value; }
         public GameObject Projectile { get => projectile; set => projectile = value; }
+        public GameObject ProjectileMain { get => projectilePrefab; set => projectilePrefab = value; }
         public Transform ProjectileSpawnPos { get => projectileSpawnPos; set => projectileSpawnPos = value; }
+        public Transform FirePoint { get => firePoint; set => firePoint = value; }
         public bool HasAttackAnimation { get => hasAttackAnimation; set => hasAttackAnimation = value; }
+        public bool IsLongAttack { get => isLongAttack; set => isLongAttack = value; }
         public float DamageAngle { get => damageAngle; set => damageAngle = value; }
         public bool IsAttacking { get => isAttacking; set => isAttacking = value; }
         public Camera MainCamera { get => mainCamera; set => mainCamera = value; }
@@ -520,12 +539,13 @@ namespace CandiceAIforGames.AI
 
             GotoIf();
             TimeToMinimizeDetection();
+           // Debug.Log("This point: " +movePoint);
 
         }
 
         public void GotoIf()
         {
-            if (IsKnowWhereUnit == false)
+            if (!IsKnowWhereUnit)
             {
                     if (!agent.pathPending && agent.remainingDistance < SphereMax) // GotoPointAgentUpdate
                     {
@@ -737,12 +757,19 @@ namespace CandiceAIforGames.AI
 
         public void AttackMelee()
         {
-                Debug.Log("attackDebil");
+                Debug.Log("attackMelee");
                 attacksPerSecond -= Time.deltaTime;
                 isKnowAttacking = true;
                 if (attacksPerSecond <= 0)
                 {
+                if (!isLongAttack)
+                {
                     AttackCheckAndKill();
+                }
+                else
+                {
+                    AttackLong();
+                }
                     IsAttacking = true;
                     attacksPerSecond = DefaultAttackPerSecond;
                 }
@@ -765,21 +792,37 @@ namespace CandiceAIforGames.AI
             }
         }
 
-        private void AttackCheckAndKill()
+        private void AttackLong()
         {
-         // Debug.Log("Negr");
-          NormalReceiveDamage(mainTarget.gameObject);
-          Debug.Log("Attack: " + IsAttacking);
-          Debug.Log("IsKnow: " + isKnowAttacking);
+            // Debug.Log("Negr");
+            if (!AllLiferSystems.IsDead)
+            {
+                FirePlayer(MainTarget.transform);
+            }
         }
 
-        private void OnCollisionStay(Collision collision)
+        private void FirePlayer(Transform target)
         {
-          /*  if (IsAttacking == true)
+            Vector3 targetDirection = (target.position - firePoint.position).normalized;
+
+            // Создаем снаряд из префаба и задаем его позицию и направление движения
+            GameObject projectile = Instantiate(projectilePrefab, firePoint.position, Quaternion.LookRotation(targetDirection));
+            Rigidbody projectileRb = projectile.GetComponent<Rigidbody>();
+
+            // Применяем силу для запуска снаряда
+            projectileRb.AddForce(targetDirection * projectileForce, ForceMode.Impulse);
+            Destroy(projectile, projectilePrefabDestroy);
+        }
+
+        private void AttackCheckAndKill()
+        {
+            // Debug.Log("Negr");
+            if (!AllLiferSystems.IsDead)
             {
-                agent.isStopped = true;
-                NormalReceiveDamage(collision.gameObject);
-            } */
+                NormalReceiveDamage(mainTarget.gameObject);
+                Debug.Log("Attack: " + IsAttacking);
+                Debug.Log("IsKnow: " + isKnowAttacking);
+            }
         }
 
         public void NormalReceiveDamage(GameObject DamagableObject)
@@ -938,6 +981,9 @@ namespace CandiceAIforGames.AI
                 IStartDetectableObject.StartOtherEnemiesWhenAttack(); //ReceiveRealDamage
             }
         }
+
+        
+
 
         void onObjectFound(CandiceDetectionResults results)
         {

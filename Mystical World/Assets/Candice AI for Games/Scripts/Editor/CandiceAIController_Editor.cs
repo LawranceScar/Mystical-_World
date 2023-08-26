@@ -530,16 +530,25 @@ namespace CandiceAIforGames.AI.Editors
             GUIContent label;
             label = new GUIContent("Attack Range", "The range that the AI will start attacking enemies.");
             character.AttackRange = EditorGUILayout.FloatField(label, character.AttackRange);
+            label = new GUIContent("Fire Rate", "Only working when IsProjectile == true");
+            character.FireRate = EditorGUILayout.FloatField(label, character.FireRate);
+            label = new GUIContent("Force Projectile", "The variable to drag");
+            character.ProjectileForce = EditorGUILayout.FloatField(label, character.ProjectileForce);
+            label = new GUIContent("Remove Projectile Prefab", "The variable to drag");
+            character.ProjectilePrefabDestoy = EditorGUILayout.FloatField(label, character.ProjectilePrefabDestoy);
             label = new GUIContent("Attack Projectile", "The projectile that the agent will fire.");
-            character.Projectile = (GameObject)EditorGUILayout.ObjectField(label, character.Projectile, typeof(GameObject), true);
-            label = new GUIContent("Projectile Spawn Position", "The point where the projectile will spawn. e.g the hand for a spell, or the bow for an arrow.");
-            character.ProjectileSpawnPos = (Transform)EditorGUILayout.ObjectField(label, character.ProjectileSpawnPos, typeof(Transform), true);
-            label = new GUIContent("Attack Damage", "The damage per attack that the agent will deal.");
+            character.ProjectileMain = (GameObject)EditorGUILayout.ObjectField(label, character.ProjectileMain, typeof(GameObject), true);
+            label = new GUIContent("ProjectilePosMain", "Main point");
+            character.FirePoint = (Transform)EditorGUILayout.ObjectField(label, character.FirePoint, typeof(Transform), true);
+            label = new GUIContent("ProjectilePos", "The point where the projectile will spawn. e.g the hand for a spell, or the bow for an arrow.");
             character.AttackDamage = EditorGUILayout.FloatField(label, character.AttackDamage);
             character.DamageAngle = EditorGUILayout.Slider("Damage Angle:", character.DamageAngle, 0, 360f);
             label = new GUIContent("Has Attack Animation", "Whether or not this agent has an attack animation.");
             character.HasAttackAnimation = EditorGUILayout.Toggle(label, character.HasAttackAnimation);
+            label = new GUIContent("Is Length Enemy", "Use this to change character");
+            character.IsLongAttack = EditorGUILayout.Toggle(label, character.IsLongAttack);
             label = new GUIContent("Attacks Per Second", "How many attacks per second the agent will deal");
+            
             character.AttacksPerSecond = EditorGUILayout.FloatField(label, character.AttacksPerSecond);
         }
 
