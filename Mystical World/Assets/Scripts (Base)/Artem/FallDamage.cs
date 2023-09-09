@@ -1,3 +1,4 @@
+using Assets.Scripts;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,23 +6,42 @@ using UnityEngine;
 public class FallDamage : MonoBehaviour
 {
     private Rigidbody rb;
-    private float Distance;
-    [SerializeField] private GameObject Player;
+    private float Distance = 10;
+
+    private float RealVelocity = 0f;
+
+    public float MaxVelocity = -45f;
+
+    [SerializeField] public GameObject Player;
 
     void Start()
     {
         rb = Player.GetComponent<Rigidbody>();
     }
 
+    private void LateUpdate()
+    {
+        RealVelocity = rb.velocity.y;
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
-            if (rb.velocity.y > 20)
+            if (RealVelocity <= MaxVelocity)
             {
-                Distance = rb.velocity.y / 2;
-                                                    //HP -= Distance
+                Distance = -RealVelocity;
+                NormalReceiveDamage(Player);
             }
+        }
+    }
+
+    public void NormalReceiveDamage(GameObject DamagableObject)
+    {
+        IDamagable IDamagableObject = DamagableObject.GetComponent<IDamagable>();
+        if (IDamagableObject != null)
+        {
+            IDamagableObject.TakerDamage(Distance); //ReceiveRealDamage
         }
     }
 

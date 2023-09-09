@@ -44,7 +44,7 @@ namespace CandiceAIforGames.AI
     #endregion
     //New inheritance chain from CandiceAnimationManager, which in turns inherits from MonoBehaviour. 
     //Scene Manager will override all aspects on future releases
-    public class CandiceAIController : CandiceAnimationManager, IDamagable, ISafeZonenable, IStartDetectable, IHealable, IResistancable
+    public class CandiceAIController : CandiceAnimationManager, IDamagable, ISafeZonenable, IStartDetectable, IHealable, IResistancable, IRigidable
     {
 
         #region Member Variables
@@ -78,6 +78,11 @@ namespace CandiceAIforGames.AI
         public float defaulttimeToStopMoveWhenHeal = 1f;
         [SerializeField]
         public float defaulttimeWhenStartHeal = 8f;
+
+
+        private bool IsRigidBody = false;
+        private float AwakeValue = 0f;
+        Rigidbody RbEnemy;
 
         [SerializeField]
         FloatingEnemyHealthBar healthbar;
@@ -416,6 +421,8 @@ namespace CandiceAIforGames.AI
 
             agent.autoBraking = false;
 
+            RbEnemy = GetComponent<Rigidbody>();
+
             GotoNextPoint();
 
             SaveWaiting = WaitingTime;
@@ -457,6 +464,21 @@ namespace CandiceAIforGames.AI
                 NewPatience++;
                 DetectFunc();
                 healthbar.UpdateBar(HitPoints, MaxHitPoints);
+            }
+        }
+
+        public void RigidBodyChange(float kdTOAwake)
+        {
+            if (!IsRigidBody)
+            {
+                if (RbEnemy != null)
+                {
+                    RbEnemy.isKinematic = false;
+                    agent.enabled = false;
+                    IsRigidBody = true;
+                   // RbEnemy.freezeRotation = false;
+                    AwakeValue = kdTOAwake;
+                }
             }
         }
 
@@ -539,13 +561,32 @@ namespace CandiceAIforGames.AI
 
             GotoIf();
             TimeToMinimizeDetection();
-           // Debug.Log("This point: " +movePoint);
+
+
+
+            //Animation here!!!!!!!
+
+            if (IsRigidBody)
+            {
+
+                AwakeValue -= Time.deltaTime; //CheckMArk
+
+                if (AwakeValue <= 0)
+                {
+                    RbEnemy.isKinematic = true;
+                    agent.enabled = true;
+                    IsRigidBody = false;
+                  //  RbEnemy.freezeRotation = true;
+                  //  RbEnemy.constraints |= RigidbodyConstraints.FreezeRotationY;
+                }
+            }
+            // Debug.Log("This point: " +movePoint);
 
         }
 
         public void GotoIf()
         {
-            if (!IsKnowWhereUnit)
+            if (!IsKnowWhereUnit && !IsRigidBody)
             {
                     if (!agent.pathPending && agent.remainingDistance < SphereMax) // GotoPointAgentUpdate
                     {
@@ -991,7 +1032,7 @@ namespace CandiceAIforGames.AI
              * The code below is only a sample to get you started.
              */
             DisableDetect();
-            if (!IsSafeZoneTrue)
+            if (!IsSafeZoneTrue && !IsRigidBody)
             {
                 if (AllLiferSystems.IsDead == false)
                 {

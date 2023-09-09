@@ -27,4 +27,9 @@ namespace Assets.Scripts
     {
         public void UpResistance(float resistance);
     }
+
+    interface IRigidable
+    {
+        public void RigidBodyChange(float kdtoawake);
+    }
 }
