@@ -4,25 +4,28 @@ using UnityEngine;
 
 public class PushingAway : MonoBehaviour
 {
-    [SerializeField] private float Force = 1000.0f;
-    void Start()
-    {
-        
-    }
+    [SerializeField] private float Force = 600.0f;
+    private Rigidbody OtherRB;
+    [SerializeField] private float DelayTime = 2.0f;
+    private float NextTime = 0.0f;
 
-    void Update()
+    void FixedUpdate()
     {
-        
+
     }
     private void OnTriggerStay(Collider other)
     {
-        Rigidbody rb = other.gameObject.GetComponent<Rigidbody>();
-        if (rb != null && other.gameObject.CompareTag("Enemy") && Input.GetKeyDown(KeyCode.N))
+        if (Input.GetKeyDown(KeyCode.N) && Time.time > NextTime)
         {
-            rb.AddForce(-other.transform.forward * Force); // Додати сили для відштовхування
+            OtherRB = other.gameObject.GetComponent<Rigidbody>();
+            if (OtherRB != null)
+            {
+                Debug.Log(other.gameObject.name);
+                if(OtherRB.isKinematic)
+                    OtherRB.isKinematic = false;
+                OtherRB.AddForce((other.transform.position - this.transform.position).normalized * Force, ForceMode.Impulse); // Додати сили для відштовхування
+                NextTime = Time.time + DelayTime;
+            }
         }
     }
-    
-        
-    
 }
