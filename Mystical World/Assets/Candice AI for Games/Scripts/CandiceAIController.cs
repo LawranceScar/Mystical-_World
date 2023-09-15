@@ -79,6 +79,23 @@ namespace CandiceAIforGames.AI
         [SerializeField]
         public float defaulttimeWhenStartHeal = 8f;
 
+        [SerializeField]
+        public AnimateScript AnimationScript; //Animate Person
+
+
+        [SerializeField]
+        public bool IsHasAnimation;
+
+
+        [SerializeField]
+        public bool IsHasRun; 
+        [SerializeField]
+        public bool IsHasWalk;
+        [SerializeField]
+        public bool IsHasDeath;
+        [SerializeField]
+        public bool IsHasAttack;
+
 
         private bool IsRigidBody = false;
         private float AwakeValue = 0f;
@@ -323,6 +340,8 @@ namespace CandiceAIforGames.AI
         public List<GameObject> Allies { get => allies; set => allies = value; }
         public List<GameObject> Players { get => players; set => players = value; }
         public GameObject Player { get => player; set => player = value; }
+        public AnimateScript AnimationCont { get => AnimationScript; set => AnimationScript = value; }
+        public bool IsHasAnim { get => IsHasAnimation; set => IsHasAnimation = value; }
         public bool ObjectDetected { get => objectDetected; set => objectDetected = value; }
         public bool PlayerDetected { get => playerDetected; set => playerDetected = value; }
         public bool AllyDetected { get => allyDetected; set => allyDetected = value; }
@@ -805,6 +824,10 @@ namespace CandiceAIforGames.AI
                 {
                 if (!isLongAttack)
                 {
+                    if (IsHasAnimation)
+                    {
+                        AnimationScript.AttackOneAnimation();
+                    }
                     AttackCheckAndKill();
                 }
                 else
@@ -1084,13 +1107,24 @@ namespace CandiceAIforGames.AI
                                         {
                                             MovePoint = this.transform.position;
                                             agent.isStopped = true;
-
+                                            if (IsHasAnimation)
+                                            {
+                                                AnimationScript.IdleAnimation(true);
+                                                AnimationScript.RunAnimation(false);
+                                                AnimationScript.WalkAnimation(false);
+                                            }
                                         }
                                         else
                                         {
                                             MovePoint = MainTarget.transform.position;
                                             agent.isStopped = false;
                                             agent.SetDestination(MovePoint);
+                                            if (IsHasAnimation)
+                                            {
+                                                AnimationScript.IdleAnimation(false);
+                                                AnimationScript.WalkAnimation(false);
+                                                AnimationScript.RunAnimation(true);
+                                            }
                                         }
                                         LookPoint = MainTarget.transform.position;
                                         AttackTarget = Enemies[0];
@@ -1155,6 +1189,14 @@ namespace CandiceAIforGames.AI
             Enemies.Clear();
             Allies.Clear();
             Players.Clear();
+
+            if (IsHasAnimation)
+            {
+                AnimationScript.IdleAnimation(false);
+                AnimationScript.WalkAnimation(true);
+                AnimationScript.RunAnimation(false);
+            }
+
         }
         void onAttackComplete(bool success)
         {

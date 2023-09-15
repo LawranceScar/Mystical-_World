@@ -159,6 +159,10 @@ namespace CandiceAIforGames.AI.Editors
             character.ResistanceDamage = EditorGUILayout.FloatField(label, character.ResistanceDamage);
             label = new GUIContent("Max Resistance", "");
             character.MaxResistanceDamage = EditorGUILayout.FloatField(label, character.MaxResistanceDamage);
+            label = new GUIContent("AnimatorScript", "");
+            character.AnimationCont = EditorGUILayout.ObjectField(label, character.AnimationCont, typeof(AnimateScript), true) as AnimateScript;
+            label = new GUIContent("Is Has Animation", "");
+            character.IsHasAnim = EditorGUILayout.Toggle(label, character.IsHasAnim);
             label = new GUIContent("Amount Heal", "");
             character.AmountOfHeal = EditorGUILayout.FloatField(label, character.AmountOfHeal);
             label = new GUIContent("Max Amount Heal", "");
