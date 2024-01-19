@@ -7,21 +7,36 @@ public class AutomaticSight : MonoBehaviour
 
     [SerializeField] private GameObject Cube;
 
+    [SerializeField] private Transform CameraTransform;
+
     [SerializeField] private float Radius = 2.0f;
 
     [SerializeField] private Movement Move;
 
+    private Vector3 LastPos;
+    private float Speed; 
+
+    private void Start()
+    {
+        LastPos = gameObject.transform.position;
+    }
+
     void Update()
     {
+        Speed = (gameObject.transform.position - LastPos).magnitude / Time.deltaTime;
         FindingEnemyUsingOverlapsphere();
+
+        Debug.Log(Speed + " = Speed");
+
+        LastPos = gameObject.transform.position;
     }
 
-    float FindAngle(List <Collider> Enemies, int i)
+    float FindAngle(GameObject Enemy)
     {
-        return Vector3.Angle(gameObject.transform.forward, Enemies[i].gameObject.transform.position - gameObject.transform.position);
+        return Vector3.Angle(CameraTransform.forward, Enemy.gameObject.transform.position - CameraTransform.position);
     }
 
-    int FindMinAngle(List<float> Angles)
+    int FindNumberOfMinAngle(List<float> Angles)
     {
         int MinAngle = 0;
         for (int i = 0; i < Angles.Count; i++)
@@ -37,34 +52,34 @@ public class AutomaticSight : MonoBehaviour
 
     void FindingEnemyUsingOverlapsphere()
     {
-        if (Move.Controller.velocity.magnitude != 0.0f)
+        if (Speed != 0.0f)
         {
             List<Collider> Enemies = new List<Collider>();
             List<float> Angles = new List<float>();
+            Dictionary<Collider, float> EnemiesAndAngles = new Dictionary<Collider, float>();
 
             Collider[] ObjectsInOverlapSphere = Physics.OverlapSphere(gameObject.transform.position, Radius);
-
+            
 
             for (int i = 0; i < ObjectsInOverlapSphere.Length; i++)
             {
                 if (ObjectsInOverlapSphere[i].CompareTag("Enemy"))
                 {
+
                     Enemies.Add(ObjectsInOverlapSphere[i]);
-                }
-                else
-                {
-                    ObjectsInOverlapSphere[i] = null;
                 }
             }
 
+             
+
             for (int i = 0; i < Enemies.Count; i++)
             {
-                Angles.Add(FindAngle(Enemies, i));
+                Angles.Add(FindAngle(Enemies[i].gameObject));
             }
 
             if (Enemies.Count > 0)
             {
-                Cube.transform.position = Enemies[FindMinAngle(Angles)].gameObject.transform.position + new Vector3(0.0f, 2.0f, 0.0f);
+                Cube.transform.position = Enemies[FindNumberOfMinAngle(Angles)].gameObject.transform.position + new Vector3(0.0f, 2.0f, 0.0f);
             }
         }
     }

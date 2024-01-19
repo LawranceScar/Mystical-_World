@@ -19,8 +19,8 @@ public class Movement : MonoBehaviour
     private float Jump;
     private float Sprint;
 
-    public int JumpCount = 0;
-    private int MaxJumpCount = 5;
+    private int JumpCount = 0;
+    private int MaxJumpCount = 2;
 
     private bool Dash;
     [SerializeField] private float DashDistance = 2;
@@ -47,10 +47,19 @@ public class Movement : MonoBehaviour
         }
         
 
-        Vector3 HorizontalPower = MoveHorizontal * gameObject.transform.right;
-        Vector3 VerticalPower = MoveVertical * gameObject.transform.forward;
+        Vector3 HorizontalPower = MoveHorizontal * CameraTransform.transform.right;
+        Vector3 VerticalPower = MoveVertical * CameraTransform.transform.forward;
         Vector3 JumpPower = Jump * gameObject.transform.up;
         Vector3 DashPower = Vector3.zero;
+
+        /*       Vector3 LookForward = new Vector3(MoveHorizontal, 0.0f, MoveVertical);
+           Quaternion PlayerForward = Quaternion.LookRotation(LookForward);
+        Quaternion Rotation = PlayerForward * CameraTransform.rotation;
+        float yVelocity = 0.0f;
+        float smooth = 0.1f;
+        float yAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, Rotation.eulerAngles.y, ref yVelocity, smooth);
+        transform.rotation = Quaternion.Euler(0, yAngle, 0); */
+        transform.LookAt(HorizontalPower, VerticalPower);
 
         if (Dash)
             DashPower =  Dashing(HorizontalPower + VerticalPower);
@@ -66,6 +75,7 @@ public class Movement : MonoBehaviour
         }
         Controller.Move(DashPower);
 
+        gameObject.transform.localEulerAngles = new Vector3(0.0f, gameObject.transform.localEulerAngles.y, 0.0f);
        // RaycastHit Target;
 
         //if (Physics.Raycast(gameObject.transform.position, PlayerVerticalPower + PlayerHorizontalPower, 1.0f, Target))
@@ -75,8 +85,8 @@ public class Movement : MonoBehaviour
     {
         MoveHorizontal = Input.GetAxis("Horizontal");
         MoveVertical = Input.GetAxis("Vertical");
-        Jump = Input.GetKeyDown(KeyCode.Space) ? 1.0f : 0.0f;
-        Sprint = Input.GetAxis("Sprint");
+        Jump = Input.GetAxis("Jump");
+        Sprint = Input.GetKeyDown(KeyCode.Space) ? 1.0f : 0.0f;
         Dash = Input.GetKeyUp(KeyCode.X);
     }
 
@@ -99,13 +109,11 @@ public class Movement : MonoBehaviour
         return DashTarget - gameObject.transform.position;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionStay(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
-            Debug.Log($"JumpCount {JumpCount}");
             JumpCount = 0;
-
         }
     }
 }
