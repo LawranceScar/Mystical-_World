@@ -9,10 +9,10 @@ public class Movement : MonoBehaviour
     [SerializeField] private Transform CameraTransform;
 
 
-    [SerializeField] private float Force = 60;
-    private float StartForce = 0;
-    private float SprintForce = 0;
-    [SerializeField] private float JumpForce = 100;
+    [SerializeField] private float Speed = 60;
+    private float StartSpeed = 0;
+    private float SprintSpeed = 0;
+    [SerializeField] private float JumpSpeed = 100;
 
     private float MoveHorizontal;
     private float MoveVertical;
@@ -28,22 +28,22 @@ public class Movement : MonoBehaviour
     void Start()
     {
         Controller = GetComponent<CharacterController>();
-        StartForce = Force;
-        SprintForce = Force * 2;
+        StartSpeed = Speed;
+        SprintSpeed = Speed * 2;
     }
 
     void Update()
     {
-        
+
         All_Inputs();
 
         if (Sprint != 0.0f && MoveVertical > 0.0f)
         {
-            Force = SprintForce;
+            Speed = SprintSpeed;
         }
         else
         {
-            Force = StartForce;
+            Speed = StartSpeed;
         }
         
 
@@ -52,33 +52,30 @@ public class Movement : MonoBehaviour
         Vector3 JumpPower = Jump * gameObject.transform.up;
         Vector3 DashPower = Vector3.zero;
 
-        /*       Vector3 LookForward = new Vector3(MoveHorizontal, 0.0f, MoveVertical);
+               Vector3 LookForward = new Vector3(MoveHorizontal, 0.0f, MoveVertical);
            Quaternion PlayerForward = Quaternion.LookRotation(LookForward);
         Quaternion Rotation = PlayerForward * CameraTransform.rotation;
-        float yVelocity = 0.0f;
-        float smooth = 0.1f;
-        float yAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, Rotation.eulerAngles.y, ref yVelocity, smooth);
-        transform.rotation = Quaternion.Euler(0, yAngle, 0); */
-        transform.LookAt(HorizontalPower, VerticalPower);
+        /* float yVelocity = 0.0f;
+         float smooth = 0.1f;
+         float yAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, Rotation.eulerAngles.y, ref yVelocity, smooth);
+         transform.rotation = Quaternion.Euler(0, yAngle, 0); */
+        //transform.LookAt(HorizontalPower, VerticalPower);
 
         if (Dash)
             DashPower =  Dashing(HorizontalPower + VerticalPower);
 
-        Controller.Move((HorizontalPower + Physics.gravity) * Force * Time.deltaTime);
-        Controller.Move((VerticalPower + Physics.gravity) * Force * Time.deltaTime);
+        Controller.Move((HorizontalPower + Physics.gravity) * Speed * Time.deltaTime);
+        Controller.Move((VerticalPower + Physics.gravity) * Speed * Time.deltaTime);
         
         if (JumpCount <= MaxJumpCount && Jump > 0.0f)
         {
-            Controller.Move((JumpPower + Physics.gravity) * JumpForce * Time.deltaTime);
+            Controller.Move((JumpPower + Physics.gravity) * JumpSpeed * Time.deltaTime);
 
             JumpCount++;
         }
         Controller.Move(DashPower);
 
         gameObject.transform.localEulerAngles = new Vector3(0.0f, gameObject.transform.localEulerAngles.y, 0.0f);
-       // RaycastHit Target;
-
-        //if (Physics.Raycast(gameObject.transform.position, PlayerVerticalPower + PlayerHorizontalPower, 1.0f, Target))
     }
 
     void All_Inputs()

@@ -7,8 +7,6 @@ public class AutomaticSight : MonoBehaviour
 
     [SerializeField] private GameObject Cube;
 
-    [SerializeField] private Transform CameraTransform;
-
     [SerializeField] private float Radius = 2.0f;
 
     [SerializeField] private Movement Move;
@@ -33,7 +31,7 @@ public class AutomaticSight : MonoBehaviour
 
     float FindAngle(GameObject Enemy)
     {
-        return Vector3.Angle(CameraTransform.forward, Enemy.gameObject.transform.position - CameraTransform.position);
+        return Vector3.Angle(gameObject.transform.forward, Enemy.gameObject.transform.position - gameObject.transform.position);
     }
 
     int FindNumberOfMinAngle(List<float> Angles)
