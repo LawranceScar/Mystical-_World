@@ -25,6 +25,8 @@ public class Movement : MonoBehaviour
     private bool Dash;
     [SerializeField] private float DashDistance = 2;
 
+    public bool CanMove = true;
+
     void Start()
     {
         Controller = GetComponent<CharacterController>();
@@ -32,9 +34,16 @@ public class Movement : MonoBehaviour
         SprintSpeed = Speed * 2;
     }
 
-    void Update()
+    private void FixedUpdate()
     {
+        if (CanMove)
+        {
+            Move();
+        }
+    }
 
+    private void Move()
+    {
         All_Inputs();
 
         if (Sprint != 0.0f && MoveVertical > 0.0f)
@@ -45,28 +54,28 @@ public class Movement : MonoBehaviour
         {
             Speed = StartSpeed;
         }
-        
+
 
         Vector3 HorizontalPower = MoveHorizontal * CameraTransform.transform.right;
         Vector3 VerticalPower = MoveVertical * CameraTransform.transform.forward;
         Vector3 JumpPower = Jump * gameObject.transform.up;
         Vector3 DashPower = Vector3.zero;
 
-               Vector3 LookForward = new Vector3(MoveHorizontal, 0.0f, MoveVertical);
-           Quaternion PlayerForward = Quaternion.LookRotation(LookForward);
+        Vector3 LookForward = new Vector3(MoveHorizontal, 0.0f, MoveVertical);
+        Quaternion PlayerForward = Quaternion.LookRotation(LookForward);
         Quaternion Rotation = PlayerForward * CameraTransform.rotation;
-        /* float yVelocity = 0.0f;
-         float smooth = 0.1f;
-         float yAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, Rotation.eulerAngles.y, ref yVelocity, smooth);
-         transform.rotation = Quaternion.Euler(0, yAngle, 0); */
-        //transform.LookAt(HorizontalPower, VerticalPower);
+        float yVelocity = 0.0f;
+        float smooth = 0.1f;
+        float yAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, Rotation.eulerAngles.y, ref yVelocity, smooth);
+        transform.rotation = Quaternion.Euler(0, yAngle, 0);
+        //transform.LookAt(HorizontalPower + VerticalPower);
 
         if (Dash)
-            DashPower =  Dashing(HorizontalPower + VerticalPower);
+            DashPower = Dashing(HorizontalPower + VerticalPower);
 
         Controller.Move((HorizontalPower + Physics.gravity) * Speed * Time.deltaTime);
         Controller.Move((VerticalPower + Physics.gravity) * Speed * Time.deltaTime);
-        
+
         if (JumpCount <= MaxJumpCount && Jump > 0.0f)
         {
             Controller.Move((JumpPower + Physics.gravity) * JumpSpeed * Time.deltaTime);
@@ -78,7 +87,7 @@ public class Movement : MonoBehaviour
         gameObject.transform.localEulerAngles = new Vector3(0.0f, gameObject.transform.localEulerAngles.y, 0.0f);
     }
 
-    void All_Inputs()
+    private void All_Inputs()
     {
         MoveHorizontal = Input.GetAxis("Horizontal");
         MoveVertical = Input.GetAxis("Vertical");
@@ -87,12 +96,12 @@ public class Movement : MonoBehaviour
         Dash = Input.GetKeyUp(KeyCode.X);
     }
 
-    Vector3 Dashing( Vector3 Direction)
+    private Vector3 Dashing(Vector3 Direction)
     {
         Direction = Direction.normalized;
         Vector3 DashTarget;
         RaycastHit Hit;
-         
+
         if (Direction == new Vector3(0.0f, 0.0f, 0.0f))
             DashTarget = gameObject.transform.position - gameObject.transform.forward * DashDistance;
         else
@@ -100,9 +109,9 @@ public class Movement : MonoBehaviour
 
         if (Physics.Raycast(gameObject.transform.position, Direction, out Hit, DashDistance))
         {
-             DashTarget = Hit.point;
+            DashTarget = Hit.point;
         }
-        
+
         return DashTarget - gameObject.transform.position;
     }
 
@@ -113,5 +122,13 @@ public class Movement : MonoBehaviour
             JumpCount = 0;
         }
     }
+
+    public void MoveTowards(Vector3 TargetPosition, float Speed)
+    {
+        Vector3 Direction = (TargetPosition - gameObject.transform.position).normalized;
+
+        Controller.Move(Direction * Speed * Time.deltaTime);
+    }
 }
+
 
