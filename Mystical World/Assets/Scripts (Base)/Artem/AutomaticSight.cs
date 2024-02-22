@@ -12,7 +12,10 @@ public class AutomaticSight : MonoBehaviour
     [SerializeField] private Movement Move;
 
     private Vector3 LastPos;
-    private float Speed; 
+    private float Speed;
+    [SerializeField] private float ComingToEnemySpeed = 10f;
+
+    
 
     private void Start()
     {
@@ -78,6 +81,7 @@ public class AutomaticSight : MonoBehaviour
             if (Enemies.Count > 0)
             {
                 Cube.transform.position = Enemies[FindNumberOfMinAngle(Angles)].gameObject.transform.position + new Vector3(0.0f, 2.0f, 0.0f);
+                Move.MoveTowards(Enemies[FindNumberOfMinAngle(Angles)].gameObject.transform.position + new Vector3(0.0f, 2.0f, 0.0f),ComingToEnemySpeed);
             }
         }
     }
