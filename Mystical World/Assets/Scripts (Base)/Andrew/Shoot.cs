@@ -46,11 +46,11 @@ public class Shoot : MonoBehaviour
 
             Rigidbody newBulletRB = newBullet.GetComponent<Rigidbody>();
 
-            // -------------------------Зміна дамагу для нових клонів пуль----------------------------------
+            // -------------------------пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ----------------------------------
 
             BulletScript BulletOverrideDamage = newBullet.GetComponent<BulletScript>();
 
-            BulletOverrideDamage.SetCurrentDamage(damage); // Задаємо саме значення з public змінної 
+            BulletOverrideDamage.SetCurrentDamage(damage); // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ public пїЅпїЅпїЅпїЅпїЅ 
 
             // ----------------------------------------------------------
 
