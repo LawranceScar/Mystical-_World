@@ -47,11 +47,13 @@ public class AllLiferSystems : MonoBehaviour, IDamagable, IHealable, ISafeZonena
 
     public static bool IsDead; // ���� ������
 
+    private Animator PlayerAnimator;
+
     public void TakerDamage(float damage)
     {
         if (!IsSafeZoneTrue)
         {
-            Health = Health - damage;
+            Health -= damage;
         }
     }
     public void Heal(float heal)
@@ -60,7 +62,7 @@ public class AllLiferSystems : MonoBehaviour, IDamagable, IHealable, ISafeZonena
         {
             if (Health <= HealthPlayer)
             {
-                Health = Health + heal;
+                Health += heal;
             }
         }
     }
@@ -80,6 +82,7 @@ public class AllLiferSystems : MonoBehaviour, IDamagable, IHealable, ISafeZonena
         StaminaAmount = Stamina;
         Health = HealthPlayer;
         MpAmount = Mana;
+        PlayerAnimator = gameObject.GetComponent<Animator>();
       //  DefaultHP = Health;
       //  DefaultStamina = StaminaAmount;
        // DefaultMP = MpAmount;
@@ -164,17 +167,17 @@ public class AllLiferSystems : MonoBehaviour, IDamagable, IHealable, ISafeZonena
             Health = 0;
         }
 
-        if (IsDead == true)
+       /* if (IsDead == true)
         {
             WhenRespawn -= Time.deltaTime;
             if (WhenRespawn <= 0)
             {
-
+                                                            // it was
                     IsDead = false;
                     Health = HealthPlayer;
                     WhenRespawn = DefaultWhenRespawn;
             }
-        }
+        }*/
       /*  if (Health <= NumberWhenHeal)
         {
             TimeToHeal -= Time.deltaTime;
@@ -187,7 +190,10 @@ public class AllLiferSystems : MonoBehaviour, IDamagable, IHealable, ISafeZonena
 
     private void Die()
     {
-        if (Health <= 0)
+        PlayerAnimator.SetTrigger("Death");
+
+        /*
+        if (Health <= 0)  // it was
         {
             IsDead = true;
         }
@@ -195,6 +201,7 @@ public class AllLiferSystems : MonoBehaviour, IDamagable, IHealable, ISafeZonena
         {
             IsDead = false;
         }
+        */
     }
 
     private void ManaSystem()

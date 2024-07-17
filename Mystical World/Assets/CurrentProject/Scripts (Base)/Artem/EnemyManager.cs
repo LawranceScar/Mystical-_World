@@ -7,22 +7,23 @@ public class EnemyManager : MonoBehaviour
 {
     public bool WantToFollowTarget = false;
 
-    [SerializeField] private List<NAVMeshEnemyMovement> Enemies;
+    [SerializeField] public List<NAVMeshEnemyMovement> Enemies;
+    [SerializeField] public List<EnemyHealthSystem> EnemiesHealth;
+    [SerializeField] public AllLiferSystems PlayerHealth = new AllLiferSystems();
 
-    private float SideOfTrigerZone = 10f;
+    private float SideOfTrigerZone = 20f;
     [SerializeField] private Transform PlayerTransform;
     [SerializeField] private float MinDistance = 3.0f;
-    
 
     private float WaitingTime = 20;
     private float AttackingTime = 0;
     private GameObject Attacker;
 
-    void Start()
+    private void Start()
     {
-
+        Enemies = new List<NAVMeshEnemyMovement>(); 
+        EnemiesHealth = new List<EnemyHealthSystem>();
     }
-
 
     void Update()
     {
@@ -46,7 +47,7 @@ public class EnemyManager : MonoBehaviour
         {
             for (int i = 0; i < 200; i++)
             {
-                if((TargetLocation - PlayerTransform.position).magnitude > MinDistance && Enemy.CalculatePath(TargetLocation, new NavMeshPath()))
+                if((TargetLocation - PlayerTransform.position).magnitude > MinDistance && Enemy.CalculatePath(TargetLocation, new NavMeshPath()) && (Enemies[i].gameObject.transform.position - TargetLocation).magnitude <= ((TargetLocation - PlayerTransform.position).magnitude))
                 {
                     break;
                 }
@@ -54,9 +55,8 @@ public class EnemyManager : MonoBehaviour
                 float RandomZ = Random.Range(0.0f, SideOfTrigerZone) - SideOfTrigerZone / 2;
                 TargetLocation = PlayerTransform.position + new Vector3(RandomX, 0.0f, RandomZ);
             }
-                
-            
         }
+        
 
         return TargetLocation;
     }
@@ -72,10 +72,15 @@ public class EnemyManager : MonoBehaviour
         for (int i = 0; i < Enemies.Count; i++)
         {
             
-            if(Enemies[i].IsTargetReached() || Attacker == Enemies[i].gameObject)
+
+            if(Enemies[i].IsTargetReached() || (Attacker == Enemies[i].gameObject && !Enemies[i].IsTargetReached()))
             {
-                if (Enemies[i] && Enemies[i].EnemyAgent)
-                Enemies[i].Move(SetTargetPosition(Enemies[i].EnemyAgent, Attacker == Enemies[i].gameObject));
+                Enemies[i].Move(SetTargetPosition(Enemies[i].gameObject.GetComponent<NavMeshAgent>(), Attacker == Enemies[i].gameObject));
+            }
+            else if (Enemies[i].gameObject == Attacker && Enemies[i].IsTargetReached())
+            {
+                Enemies[i].Stop();
+                Enemies[i].AttackEnemy();
             }
         }
         Attacker = null;
@@ -95,4 +100,11 @@ public class EnemyManager : MonoBehaviour
             SetEnemies();
         }
     }
+
+    public void AddEnemy(GameObject NewEnemy)
+    {
+        Enemies.Add(NewEnemy.GetComponent<NAVMeshEnemyMovement>());
+        EnemiesHealth.Add(NewEnemy.GetComponent<EnemyHealthSystem>());
+    }
+    
 }
